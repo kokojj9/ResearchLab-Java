@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.researchlab.member.model.dao.MemberMapper">
+
+<!--	<resultMap id="memberResultSet" type="member">-->
+<!--		<result column="MEMBER_NO"     property="memberNo"/>-->
+<!--		<result column="MEMBER_ID"     property="memberId"/>-->
+<!--		<result column="MEMBER_PWD"    property="memberPwd"/>-->
+<!--		<result column="EMAIL"         property="email"/>-->
+<!--		<result column="ENROLL_DATE"   property="enrollDate"/>-->
+<!--		<result column="UPDATE_DATE"   property="updateDate"/>-->
+<!--		<result column="STATUS"        property="status"/>-->
+<!--		<result column="PRIVILEGE"     property="privilege"/>-->
+<!--		<result column="POSTCODE"      property="postCode"/>-->
+<!--		<result column="ROADADDRESS"   property="roadAddress"/>-->
+<!--		<result column="DETAILADDRESS" property="detailAddress"/>-->
+<!--		<result column="SOCIAL"        property="social"/>-->
+<!--	</resultMap>-->
+<!--	-->
+<!--	<resultMap id="myPageResultSet" type="myPageInfo">-->
+<!--    	<result column="MEMBER_NO" property="memberNo"/>-->
+<!--        <result column="MEMBER_ID" property="memberId"/>-->
+<!--	    <collection property="boardList" ofType="Board">-->
+<!--	        <result column="BOARD_NO"      property="boardNo"/>            -->
+<!--	        <result column="BOARD_TITLE"   property="boardTitle"/>            -->
+<!--	        <result column="CATEGORY_NAME" property="categoryName"/>            -->
+<!--	        <result column="CREATE_DATE"   property="createDate"/>            -->
+<!--	    </collection>-->
+<!--	    <collection property="tradeBoardList" ofType="TradeBoard">-->
+<!--	        <result column="TRADEBOARD_NO" property="tradeBoardNo"/>        -->
+<!--	        <result column="TRADE_STATUS"  property="tradeStatus"/>        -->
+<!--	    </collection>-->
+<!--	    <collection property="reservationList" ofType="Reservation">-->
+<!--	        <result column="RESERVATION_NO" property="reservationNo"/>-->
+<!--	        <result column="CHECKOUT_DATE"  property="checkOutDate"/>-->
+<!--	        <result column="CHECKIN_DATE"   property="checkInDate"/>-->
+<!--	        <result column="RESER_STATUS"   property="reserStatus"/>-->
+<!--	        <result column="CAMP_NAME"      property="campName"/>-->
+<!--	        <result column="PEOPLE"         property="people"/>-->
+<!--	    </collection>-->
+<!--	</resultMap>-->
+<!--	-->
+
+<!--	<select id="login" parameterType="member" resultMap="memberResultSet">-->
+<!--		SELECT -->
+<!--		       MEMBER_NO,-->
+<!--  			   MEMBER_ID,-->
+<!--			   MEMBER_PWD,-->
+<!--			   EMAIL,-->
+<!--			   ENROLL_DATE,-->
+<!--			   UPDATE_DATE,-->
+<!--			   STATUS,-->
+<!--			   PRIVILEGE,-->
+<!--			   SOCIAL,-->
+<!--			   POSTCODE,-->
+<!--			   ROADADDRESS,-->
+<!--			   DETAILADDRESS-->
+<!--          FROM -->
+<!--          	   TB_MEMBER -->
+<!--         WHERE -->
+<!--         	   MEMBER_ID = #{ memberId }-->
+<!--		   AND -->
+<!--		   	   STATUS = 'Y'-->
+<!--	</select>-->
+<!--	-->
+<!--	<insert id="insertMember" parameterType="member">-->
+<!--		INSERT-->
+<!--		  INTO-->
+<!--		       TB_MEMBER-->
+<!--		       (-->
+<!--		       MEMBER_NO,-->
+<!--  			   MEMBER_ID,-->
+<!--			   MEMBER_PWD,-->
+<!--			   EMAIL,-->
+<!--			   ENROLL_DATE,-->
+<!--			   UPDATE_DATE,-->
+<!--			   STATUS,-->
+<!--			   PRIVILEGE,-->
+<!--			   SOCIAL,-->
+<!--			   POSTCODE,-->
+<!--			   ROADADDRESS,-->
+<!--			   DETAILADDRESS-->
+<!--		       )-->
+<!--		VALUES-->
+<!--		       (-->
+<!--		       SEQ_MEMBERNO.NEXTVAL,-->
+<!--		       #{ memberId },-->
+<!--		       #{ memberPwd },-->
+<!--		       #{ email },-->
+<!--		       SYSDATE,-->
+<!--		       SYSDATE,-->
+<!--		       DEFAULT,-->
+<!--		       DEFAULT,-->
+<!--		       #{ social },-->
+<!--		       #{ postCode },-->
+<!--		       #{ roadAddress },-->
+<!--		       #{ detailAddress }-->
+<!--		       )-->
+<!--	</insert>-->
+<!--	-->
+<!--	<insert id="insertAuthCode" parameterType="hashmap">-->
+<!--		INSERT-->
+<!--		  INTO-->
+<!--		       TB_AUTHCODE-->
+<!--		       (-->
+<!--		       AUTHDATE,-->
+<!--			   EMAIL,-->
+<!--			   REMOTEADDR,-->
+<!--			   CODE-->
+<!--		       )-->
+<!--		VALUES-->
+<!--		       (-->
+<!--		       SYSDATE,-->
+<!--		       #{ email },-->
+<!--		       #{ remoteAddr },-->
+<!--		       #{ code }-->
+<!--		       )-->
+<!--	</insert>-->
+<!--	-->
+<!--	<select id="checkAuthCode" parameterType="hashmap" resultType="string">-->
+<!--		SELECT CODE-->
+<!--		       -->
+<!--		  FROM TB_AUTHCODE-->
+<!--		  -->
+<!--		 WHERE REMOTEADDR = #{ remoteAddr }-->
+<!--		   AND CODE = #{ authCode }-->
+<!--		   AND EMAIL = #{ email }-->
+<!--	</select>-->
+<!--	-->
+<!--	<select id="checkMemberEmail" parameterType="string" resultType="string">-->
+<!--		SELECT EMAIL-->
+<!--		       -->
+<!--		  FROM TB_MEMBER-->
+<!--		  -->
+<!--		 WHERE EMAIL = #{ email }-->
+<!--	</select>-->
+
+<!--	<select id="checkMemberId" parameterType="string" resultType="string">-->
+<!--		SELECT -->
+<!--			   MEMBER_ID-->
+<!--		  FROM -->
+<!--		  	   TB_MEMBER-->
+<!--		 WHERE -->
+<!--		 	   MEMBER_ID = #{ memberId }-->
+<!--	</select>-->
+<!--	-->
+<!--	<select id="searchPwd" parameterType="member" resultType="string">-->
+<!--		SELECT -->
+<!--			   MEMBER_ID-->
+<!--		  FROM -->
+<!--		  	   TB_MEMBER-->
+<!--	     WHERE -->
+<!--	     	   MEMBER_ID = #{ memberId }-->
+<!--	       AND -->
+<!--	       	   EMAIL = #{ email }-->
+<!--	</select>-->
+
+<!--	<select id="searchMyPage" parameterType="string" resultMap="myPageResultSet">-->
+<!--		SELECT-->
+<!--		       MEMBER_NO,-->
+<!--		       MEMBER_ID,-->
+<!--		       b.BOARD_NO AS BOARD_NO,-->
+<!--		       b.BOARD_TITLE AS BOARD_TITLE,-->
+<!--		       CREATE_DATE,-->
+<!--		       CATEGORY_NAME,-->
+<!--		       tb.BOARD_NO AS TRADEBOARD_NO,-->
+<!--		       TRADE_STATUS,-->
+<!--		       RESERVATION_NO,-->
+<!--		       CAMP_NAME,-->
+<!--		       TO_CHAR(CHECKIN_DATE, 'YYYY-MM-DD') AS CHECKIN_DATE,-->
+<!--		       TO_CHAR(CHECKOUT_DATE, 'YYYY-MM-DD') AS CHECKOUT_DATE,-->
+<!--		       PEOPLE,-->
+<!--		       RESER_STATUS-->
+<!--		  FROM -->
+<!--		       TB_MEMBER m-->
+<!--          LEFT -->
+<!--          JOIN -->
+<!--               TB_RESERVATION r USING(MEMBER_NO)-->
+<!--          LEFT -->
+<!--          JOIN -->
+<!--               TB_BOARD b USING(MEMBER_NO)-->
+<!--          LEFT -->
+<!--          JOIN -->
+<!--          	   TB_TRADEBOARD tb USING(MEMBER_NO)-->
+<!--          LEFT -->
+<!--          JOIN -->
+<!--          	   TB_CATEGORY c ON(b.CATEGORY_CODE = c.CATEGORY_CODE)-->
+<!--          JOIN -->
+<!--          	   TB_SITE USING(SITE_NO)-->
+<!--		  JOIN -->
+<!--		  	   TB_CAMP USING(CAMP_NO)-->
+<!--		 WHERE -->
+<!--		 	   MEMBER_ID = #{ memberId }-->
+<!--		 ORDER -->
+<!--		 	BY -->
+<!--		 	   RESERVATION_NO,-->
+<!--		       TRADEBOARD_NO,-->
+<!--		       BOARD_NO DESC-->
+<!--	</select>-->
+
+<!--	<update id="editMember" parameterType="member">-->
+<!--		UPDATE -->
+<!--			   TB_MEMBER-->
+<!--           SET-->
+<!--	    	<if test='changePwdType == "Y"'>-->
+<!--	           MEMBER_PWD = #{ memberPwd },-->
+<!--	        </if>-->
+<!--	           POSTCODE = #{ postCode },-->
+<!--			   ROADADDRESS = #{ roadAddress },-->
+<!--			   DETAILADDRESS = #{ detailAddress }-->
+<!--	     WHERE -->
+<!--	     	   MEMBER_ID = #{memberId}-->
+<!--	</update>-->
+
+<!--	<select id="searchId" parameterType="string" resultType="string">-->
+<!--		SELECT -->
+<!--			   MEMBER_ID-->
+<!--		  FROM -->
+<!--		  	   TB_MEMBER-->
+<!--	     WHERE -->
+<!--	     	   EMAIL = #{ email }-->
+<!--		   AND -->
+<!--		   	   STATUS = 'Y'-->
+<!--	</select>-->
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>
