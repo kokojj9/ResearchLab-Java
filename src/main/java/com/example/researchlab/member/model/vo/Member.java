@@ -13,6 +13,5 @@ public class Member {
     String memberId;
     @NotBlank
     String memberPwd;
-    @NotBlank
     String email;
 }

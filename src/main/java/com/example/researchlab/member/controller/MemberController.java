@@ -1,7 +1,7 @@
 package com.example.researchlab.member.controller;
 
 import com.example.researchlab.common.model.vo.ResponseData;
-import com.example.researchlab.common.template.ResponseTemplate;
+import com.example.researchlab.template.ResponseTemplate;
 import com.example.researchlab.member.model.service.MemberService;
 import com.example.researchlab.member.model.vo.Member;
 import jakarta.servlet.http.HttpSession;
@@ -30,14 +30,14 @@ public class MemberController {
     public ResponseEntity<ResponseData> login(@RequestBody @Valid Member member, HttpSession session, BindingResult br) {
         ResponseData rd = new ResponseData();
         // 추후에 JWT활용 로그인 방식으로 변경
-
+        System.out.println(member);
         if(br.hasErrors()){
             rd = ResponseData.builder()
                              .data(null)
-                             .resultMessage("잘못된 요청")
+                             .resultMessage("bad request")
                              .responseCode("NN")
                              .build();
-
+            System.out.println("유효성 실패");
             return responseTemplate.fail(rd, HttpStatus.BAD_REQUEST);
         } else {
 
@@ -46,21 +46,25 @@ public class MemberController {
             if(loginMember != null) {
 
                 rd = ResponseData.builder()
-                        .data(null)
-                        .resultMessage("통신성공")
+                        .data(loginMember)
+                        .resultMessage("login success")
                         .responseCode("NN")
                         .build();
 
-                session.setAttribute("loginMember", loginMember);
-
                 return responseTemplate.success(rd, HttpStatus.OK);
             }
-
-            return responseTemplate.fail(rd, HttpStatus.UNAUTHORIZED);
+            System.out.println("로그인실패");
+            return responseTemplate.success(rd, HttpStatus.OK);
         }
     }
 
     //로그아웃
+    @PostMapping("/logout")
+    public ResponseEntity<ResponseData> lopgout() {
+        // 세션 정보를 지우는 로직 실행
+        return null;
+    }
+    
     //회원가입
 
     @PostMapping("/enroll")

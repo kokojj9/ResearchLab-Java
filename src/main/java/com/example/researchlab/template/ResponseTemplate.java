@@ -1,4 +1,4 @@
-package com.example.researchlab.common.template;
+package com.example.researchlab.template;
 
 import com.example.researchlab.common.model.vo.ResponseData;
 import org.springframework.http.HttpStatus;
