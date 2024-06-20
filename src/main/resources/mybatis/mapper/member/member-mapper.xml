@@ -18,7 +18,7 @@
 		SELECT
 			   MEMBER_NO,
 			   MEMBER_ID,
-<!--			   MEMBER_PWD,-->
+			   MEMBER_PWD,
 			   EMAIL,
 			   ENROLL_DATE
 		  FROM

@@ -11,10 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,22 +32,35 @@ public class MemberController {
             Member loginMember = memberService.login(member);
 
             if(loginMember != null) {
-                return responseTemplate.success("login success", loginMember, HttpStatus.OK);
+                loginMember.setMemberPwd(null);
+                session.setAttribute("loginMember", loginMember);
+                return responseTemplate.success("login success", null, HttpStatus.OK);
             }
 
             return responseTemplate.success("undefined member", null, HttpStatus.OK);
         }
     }
 
-    //로그아웃
-    @PostMapping("/logout")
-    public ResponseEntity<ResponseData<Object>> lopgout() {
+    @GetMapping("/getSession")
+    public ResponseEntity<ResponseData<Object>> getSessionInfo(HttpSession session){
+        Member member = (Member) session.getAttribute("loginMember");
         
-        return null;
+        if(member != null) {
+            System.out.println("세션 성공");
+            return responseTemplate.success("session valid", member, HttpStatus.OK);
+        }
+        System.out.println("세션 실패");
+        return responseTemplate.fail("no session", HttpStatus.UNAUTHORIZED);
+    }
+
+    // 로그아웃
+    @PostMapping("/logout")
+    public ResponseEntity<ResponseData<Object>> logout(HttpSession session) {
+        session.invalidate();
+        return responseTemplate.success("logout success", null, HttpStatus.OK);
     }
     
     //회원가입
-
     @PostMapping("/enroll")
     public ResponseEntity<ResponseData<Object>> enrollMember(@RequestBody @Valid Member member, BindingResult br){
         if(br.hasErrors()){
