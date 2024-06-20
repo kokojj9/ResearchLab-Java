@@ -8,7 +8,7 @@
 	<settings>
 		<setting name="jdbcTypeForNull" value="NULL"/>
 	</settings>
-
+<!-- 이유는 모르겠지만 typeAliases가 매퍼파일과 연동되지않음-->
 	<typeAliases>
 		<typeAlias type="com.example.researchlab.member.model.vo.Member" alias="member"/>
 	</typeAliases>
