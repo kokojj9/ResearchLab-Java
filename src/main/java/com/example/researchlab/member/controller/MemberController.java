@@ -37,10 +37,11 @@ public class MemberController {
                              .resultMessage("bad request")
                              .responseCode("NN")
                              .build();
+
             System.out.println("유효성 실패");
+
             return responseTemplate.fail(rd, HttpStatus.BAD_REQUEST);
         } else {
-
             Member loginMember = memberService.login(member);
 
             if(loginMember != null) {
@@ -48,12 +49,20 @@ public class MemberController {
                 rd = ResponseData.builder()
                         .data(loginMember)
                         .resultMessage("login success")
-                        .responseCode("NN")
+                        .responseCode("YY")
                         .build();
 
                 return responseTemplate.success(rd, HttpStatus.OK);
             }
+
+            rd = ResponseData.builder()
+                    .data(null)
+                    .resultMessage("undefined member")
+                    .responseCode("NN")
+                    .build();
+
             System.out.println("로그인실패");
+
             return responseTemplate.success(rd, HttpStatus.OK);
         }
     }
