@@ -14,4 +14,6 @@ public class Member {
     @NotBlank
     String memberPwd;
     String email;
+    String enrollDate;
+    String status;
 }

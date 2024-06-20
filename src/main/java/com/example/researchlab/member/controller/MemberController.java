@@ -11,10 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,58 +24,56 @@ public class MemberController {
 
     //로그인
     @PostMapping("/login")
-    public ResponseEntity<ResponseData> login(@RequestBody @Valid Member member, HttpSession session, BindingResult br) {
-        ResponseData rd = new ResponseData();
+    public ResponseEntity<ResponseData<Object>> login(@RequestBody @Valid Member member, HttpSession session, BindingResult br) {
         // 추후에 JWT활용 로그인 방식으로 변경
-        System.out.println(member);
         if(br.hasErrors()){
-            rd = ResponseData.builder()
-                             .data(null)
-                             .resultMessage("bad request")
-                             .responseCode("NN")
-                             .build();
-
-            System.out.println("유효성 실패");
-
-            return responseTemplate.fail(rd, HttpStatus.BAD_REQUEST);
+            return responseTemplate.fail("invalid info", HttpStatus.BAD_REQUEST);
         } else {
             Member loginMember = memberService.login(member);
 
             if(loginMember != null) {
-
-                rd = ResponseData.builder()
-                        .data(loginMember)
-                        .resultMessage("login success")
-                        .responseCode("YY")
-                        .build();
-
-                return responseTemplate.success(rd, HttpStatus.OK);
+                loginMember.setMemberPwd(null);
+                session.setAttribute("loginMember", loginMember);
+                return responseTemplate.success("login success", null, HttpStatus.OK);
             }
 
-            rd = ResponseData.builder()
-                    .data(null)
-                    .resultMessage("undefined member")
-                    .responseCode("NN")
-                    .build();
-
-            System.out.println("로그인실패");
-
-            return responseTemplate.success(rd, HttpStatus.OK);
+            return responseTemplate.success("undefined member", null, HttpStatus.OK);
         }
     }
 
-    //로그아웃
+    @GetMapping("/getSession")
+    public ResponseEntity<ResponseData<Object>> getSessionInfo(HttpSession session){
+        Member member = (Member) session.getAttribute("loginMember");
+        
+        if(member != null) {
+            System.out.println("세션 성공");
+            return responseTemplate.success("session valid", member, HttpStatus.OK);
+        }
+        System.out.println("세션 실패");
+        return responseTemplate.fail("no session", HttpStatus.UNAUTHORIZED);
+    }
+
+    // 로그아웃
     @PostMapping("/logout")
-    public ResponseEntity<ResponseData> lopgout() {
-        // 세션 정보를 지우는 로직 실행
-        return null;
+    public ResponseEntity<ResponseData<Object>> logout(HttpSession session) {
+        session.invalidate();
+        return responseTemplate.success("logout success", null, HttpStatus.OK);
     }
     
     //회원가입
-
     @PostMapping("/enroll")
-    public ResponseEntity<ResponseData> enrollMember(@RequestBody Member member){
-        return null;
+    public ResponseEntity<ResponseData<Object>> enrollMember(@RequestBody @Valid Member member, BindingResult br){
+        if(br.hasErrors()){
+            return responseTemplate.fail("invalid info", HttpStatus.BAD_REQUEST);
+        } else {
+            int result = memberService.enrollMember(member);
+
+            if(result > 0) {
+                return responseTemplate.success("enroll success", null, HttpStatus.OK);
+            }
+
+            return responseTemplate.success("enroll fail", null, HttpStatus.OK);
+        }
     }
     //정보수정
     //탈퇴

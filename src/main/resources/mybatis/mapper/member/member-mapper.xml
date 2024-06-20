@@ -10,17 +10,45 @@
 		<result column="MEMBER_ID"     property="memberId"/>
 		<result column="MEMBER_PWD"    property="memberPwd"/>
 		<result column="EMAIL"         property="email"/>
+		<result column="ENROLL_DATE"   property="enrollDate"/>
+		<result column="STATUS"        property="status"/>
 	</resultMap>
 
 	<select id="login" parameterType="com.example.researchlab.member.model.vo.Member" resultMap="memberResultSet">
 		SELECT
-		MEMBER_NO,
-		MEMBER_ID,
-		MEMBER_PWD,
-		EMAIL
-		FROM
-		TB_MEMBER
-		WHERE
-		MEMBER_ID = #{memberId}
+			   MEMBER_NO,
+			   MEMBER_ID,
+			   MEMBER_PWD,
+			   EMAIL,
+			   ENROLL_DATE
+		  FROM
+			   TB_MEMBER
+		 WHERE
+			   MEMBER_ID = #{memberId}
+		   AND
+			   STATUS = 'Y'
 	</select>
+
+	<insert id="enrollMember" parameterType="com.example.researchlab.member.model.vo.Member">
+		INSERT
+		  INTO
+			   TB_MEMBER
+		VALUES
+			   (
+			   SEQ_MEMNO.NEXTVAL,
+			   #{memberId},
+			   #{memberPwd},
+			   #{email},
+			   SYSDATE,
+			   DEFAULT
+			   )
+	</insert>
+
+
+
+
+
+
+
+
 </mapper>

@@ -13,18 +13,30 @@ import java.nio.charset.Charset;
 public class ResponseTemplateImpl implements ResponseTemplate{
 
     @Override
-    public ResponseEntity<ResponseData> success(ResponseData rd, HttpStatus httpStatus) {
+    public <T> ResponseEntity<ResponseData<T>> success(String resultMessage, T data, HttpStatus httpStatus) {
+        ResponseData<T> rd = ResponseData.<T>builder()
+                                         .data(data)
+                                         .resultMessage(resultMessage)
+                                         .responseCode("YY")
+                                         .build();
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 
-        return new ResponseEntity<ResponseData>(rd, headers, httpStatus.OK);
+        return new ResponseEntity<ResponseData<T>>(rd, headers, httpStatus);
     }
 
     @Override
-    public ResponseEntity<ResponseData> fail(ResponseData rd, HttpStatus httpStatus) {
+    public <T> ResponseEntity<ResponseData<T>> fail(String resultMessage, HttpStatus httpStatus) {
+        ResponseData<Void> rd = ResponseData.<Void>builder()
+                                            .data(null)
+                                            .resultMessage(resultMessage)
+                                            .responseCode("NN")
+                                            .build();
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 
-        return new ResponseEntity<ResponseData>(headers, httpStatus);
+        return new ResponseEntity<ResponseData<T>>(headers, httpStatus);
     }
 }

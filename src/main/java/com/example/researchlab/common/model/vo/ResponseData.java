@@ -1,6 +1,5 @@
 package com.example.researchlab.common.model.vo;
 
-import com.example.researchlab.member.model.vo.Member;
 import lombok.*;
 
 @Getter
@@ -8,8 +7,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ResponseData {
+public class ResponseData<T> {
     private String responseCode;
     private String resultMessage;
-    private Member data;
+    private T data;
 }

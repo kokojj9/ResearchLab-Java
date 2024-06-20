@@ -23,7 +23,13 @@ public class MemberServiceImpl implements MemberService{
         return null;
     }
 
+    @Override
+    public int enrollMember(Member member) {
+        String encodedPassword = bc.encode(member.getMemberPwd());
+        member.setMemberPwd(encodedPassword);
 
+        return memberMapper.enrollMember(member);
+    }
 
 
 }
