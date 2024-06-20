@@ -23,7 +23,16 @@ public class MemberServiceImpl implements MemberService{
         return null;
     }
 
+    @Override
+    public int enrollMember(Member member) {
+        int result = memberMapper.enrollMember(member);
 
+        if(result > 0){
+
+        }
+
+        return 0;
+    }
 
 
 }

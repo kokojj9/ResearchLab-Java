@@ -6,8 +6,8 @@ import org.springframework.http.ResponseEntity;
 
 public interface ResponseTemplate {
 
-    ResponseEntity<ResponseData> success(ResponseData rd, HttpStatus httpStatus);
+    <T> ResponseEntity<ResponseData<T>> success(String resultMessage, T data, HttpStatus httpStatus);
 
-    ResponseEntity<ResponseData> fail(ResponseData rd, HttpStatus httpStatus);
+    <T> ResponseEntity<ResponseData<T>> fail(String resultMessage, HttpStatus httpStatus);
 
 }
