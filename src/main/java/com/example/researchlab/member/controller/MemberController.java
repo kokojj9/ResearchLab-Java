@@ -46,11 +46,9 @@ public class MemberController {
         Member member = (Member) session.getAttribute("loginMember");
         
         if(member != null) {
-            System.out.println("세션 성공");
             return responseTemplate.success("session valid", member, HttpStatus.OK);
         }
-        System.out.println("세션 실패");
-        return responseTemplate.fail("no session", HttpStatus.UNAUTHORIZED);
+        return responseTemplate.success("no session", null, HttpStatus.OK);
     }
 
     // 로그아웃
