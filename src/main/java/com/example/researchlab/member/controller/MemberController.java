@@ -9,7 +9,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/members")
 public class MemberController {
 
-    private final BCryptPasswordEncoder bc;
     private final MemberService memberService;
     private final ResponseTemplate responseTemplate;
 
