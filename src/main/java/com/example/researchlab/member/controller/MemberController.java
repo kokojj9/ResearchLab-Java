@@ -7,6 +7,8 @@ import com.example.researchlab.member.model.vo.Member;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -19,61 +21,66 @@ public class MemberController {
 
     private final MemberService memberService;
     private final ResponseTemplate responseTemplate;
+    private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
 
-    //로그인
     @PostMapping("/login")
     public ResponseEntity<ResponseData<Object>> login(@RequestBody @Valid Member member, HttpSession session, BindingResult br) {
-        // 추후에 JWT활용 로그인 방식으로 변경
-        if(br.hasErrors()){
-            return responseTemplate.fail("invalid info", HttpStatus.BAD_REQUEST);
+        logger.info("회원 로그인 시도: {}", member.getMemberId());
+
+        if (br.hasErrors()) {
+            logger.warn("유효성 검사 오류: {}", br.getAllErrors());
+            return responseTemplate.fail("잘못된 정보", HttpStatus.BAD_REQUEST);
         } else {
             Member loginMember = memberService.login(member);
 
-            if(loginMember != null) {
+            if (loginMember != null) {
                 loginMember.setMemberPwd(null);
                 session.setAttribute("loginMember", loginMember);
-                return responseTemplate.success("login success", null, HttpStatus.OK);
+                logger.info("로그인 성공: {}", member.getMemberId());
+                return responseTemplate.success("로그인 성공", null, HttpStatus.OK);
             }
 
-            return responseTemplate.success("undefined member", null, HttpStatus.OK);
+            logger.warn("로그인 실패: {}", member.getMemberId());
+            return responseTemplate.success("존재하지 않는 회원", null, HttpStatus.OK);
         }
     }
 
     @GetMapping("/getSession")
-    public ResponseEntity<ResponseData<Object>> getSessionInfo(HttpSession session){
+    public ResponseEntity<ResponseData<Object>> getSessionInfo(HttpSession session) {
         Member member = (Member) session.getAttribute("loginMember");
-        
-        if(member != null) {
-            return responseTemplate.success("session valid", member, HttpStatus.OK);
+
+        if (member != null) {
+            logger.info("유효한 세션: {}", member.getMemberId());
+            return responseTemplate.success("유효한 세션", member, HttpStatus.OK);
         }
-        return responseTemplate.success("no session", null, HttpStatus.OK);
+        logger.warn("세션 없음");
+        return responseTemplate.success("세션 없음", null, HttpStatus.OK);
     }
 
-    // 로그아웃
     @PostMapping("/logout")
     public ResponseEntity<ResponseData<Object>> logout(HttpSession session) {
+        logger.info("로그아웃");
         session.invalidate();
-        return responseTemplate.success("logout success", null, HttpStatus.OK);
+        return responseTemplate.success("로그아웃 성공", null, HttpStatus.OK);
     }
-    
-    //회원가입
+
     @PostMapping("/enroll")
-    public ResponseEntity<ResponseData<Object>> enrollMember(@RequestBody @Valid Member member, BindingResult br){
-        if(br.hasErrors()){
-            return responseTemplate.fail("invalid info", HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ResponseData<Object>> enrollMember(@RequestBody @Valid Member member, BindingResult br) {
+        logger.info("회원가입 시도: {}", member.getMemberId());
+
+        if (br.hasErrors()) {
+            logger.warn("유효성 검사 오류: {}", br.getAllErrors());
+            return responseTemplate.fail("잘못된 정보", HttpStatus.BAD_REQUEST);
         } else {
             int result = memberService.enrollMember(member);
 
-            if(result > 0) {
-                return responseTemplate.success("enroll success", null, HttpStatus.OK);
+            if (result > 0) {
+                logger.info("회원가입 성공: {}", member.getMemberId());
+                return responseTemplate.success("회원가입 성공", null, HttpStatus.OK);
             }
 
-            return responseTemplate.success("enroll fail", null, HttpStatus.OK);
+            logger.warn("회원가입 실패: {}", member.getMemberId());
+            return responseTemplate.success("회원가입 실패", null, HttpStatus.OK);
         }
     }
-    //정보수정
-    //탈퇴
-
-
-
 }
