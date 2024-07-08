@@ -53,7 +53,7 @@ public class MemberControllerTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         verify(session).setAttribute("loginMember", member);
-        verify(responseTemplate).success("login success", null, HttpStatus.OK);
+        verify(responseTemplate).success("로그인 성공", null, HttpStatus.OK);
     }
 
     @Test
@@ -69,7 +69,7 @@ public class MemberControllerTest {
         ResponseEntity<ResponseData<Object>> response = memberController.login(member, session, bindingResult);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        verify(responseTemplate).success("undefined member", null, HttpStatus.OK);
+        verify(responseTemplate).success("존재하지 않는 회원", null, HttpStatus.OK);
     }
 
     @Test
@@ -85,7 +85,7 @@ public class MemberControllerTest {
         ResponseEntity<ResponseData<Object>> response = memberController.enrollMember(member, bindingResult);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        verify(responseTemplate).success("enroll success", null, HttpStatus.OK);
+        verify(responseTemplate).success("회원가입 성공", null, HttpStatus.OK);
     }
 
     @Test
@@ -101,6 +101,6 @@ public class MemberControllerTest {
         ResponseEntity<ResponseData<Object>> response = memberController.enrollMember(member, bindingResult);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        verify(responseTemplate).success("enroll fail", null, HttpStatus.OK);
+        verify(responseTemplate).success("회원가입 실패", null, HttpStatus.OK);
     }
 }
