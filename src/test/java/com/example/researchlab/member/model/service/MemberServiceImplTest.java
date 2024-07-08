@@ -31,11 +31,11 @@ public class MemberServiceImplTest {
     @Test
     public void testLoginSuccess() {
         Member member = new Member();
-        member.setMemberId("testuser");
+        member.setMemberId("testUser");
         member.setMemberPwd("password");
 
         Member returnedMember = new Member();
-        returnedMember.setMemberId("testuser");
+        returnedMember.setMemberId("testUser");
         returnedMember.setMemberPwd("$2a$10$Dow0RkzVgFtjfXKwji8gfOZlbZ.YrVWZfQKoFbY/Z0ZzKxv4k7WzG"); // BCrypt hashed password
 
         // memberMapper.login() 호출 시 returnedMember 반환
@@ -48,14 +48,14 @@ public class MemberServiceImplTest {
 
         // 결과 검증
         assertNotNull(result);
-        assertEquals("testuser", result.getMemberId());
+        assertEquals("testUser", result.getMemberId());
     }
 
     @Test
     public void testLoginFail() {
         Member member = new Member();
-        member.setMemberId("testuser");
-        member.setMemberPwd("wrongpassword");
+        member.setMemberId("testUser");
+        member.setMemberPwd("password");
 
         // memberMapper.login() 호출 시 null 반환
         when(memberMapper.login(any(Member.class))).thenReturn(null);
