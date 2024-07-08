@@ -3,33 +3,46 @@ package com.example.researchlab.member.model.service;
 import com.example.researchlab.member.model.dao.MemberMapper;
 import com.example.researchlab.member.model.vo.Member;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class MemberServiceImpl implements MemberService{
+public class MemberServiceImpl implements MemberService {
 
     private final MemberMapper memberMapper;
     private final BCryptPasswordEncoder bc;
+    private static final Logger logger = LoggerFactory.getLogger(MemberServiceImpl.class);
+
     @Override
     public Member login(Member member) {
+        logger.info("회원 로그인: {}", member.getMemberId());
         Member loginMember = memberMapper.login(member);
 
-        if (loginMember != null && bc.matches(member.getMemberPwd(), loginMember.getMemberPwd())){
-           return loginMember;
+        if (loginMember != null && bc.matches(member.getMemberPwd(), loginMember.getMemberPwd())) {
+            logger.info("비밀번호 일치: {}", member.getMemberId());
+            return loginMember;
         }
 
+        logger.warn("비밀번호 불일치 또는 존재하지 않는 회원: {}", member.getMemberId());
         return null;
     }
 
     @Override
     public int enrollMember(Member member) {
+        logger.info("회원가입: {}", member.getMemberId());
         String encodedPassword = bc.encode(member.getMemberPwd());
         member.setMemberPwd(encodedPassword);
 
-        return memberMapper.enrollMember(member);
+        int result = memberMapper.enrollMember(member);
+        if (result > 0) {
+            logger.info("회원가입 성공: {}", member.getMemberId());
+        } else {
+            logger.warn("회원가입 실패: {}", member.getMemberId());
+        }
+
+        return result;
     }
-
-
 }
