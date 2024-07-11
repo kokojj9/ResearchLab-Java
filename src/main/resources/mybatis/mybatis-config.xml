@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE configuration
-		PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
-		"https://mybatis.org/dtd/mybatis-3-config.dtd">
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-config.dtd">
 
 <configuration>
+    <settings>
+        <setting name="jdbcTypeForNull" value="NULL"/>
+    </settings>
+    <!-- 이유는 모르겠지만 typeAliases가 매퍼파일과 연동되지않음-->
+    <typeAliases>
+        <typeAlias type="com.example.researchlab.member.model.vo.Member" alias="member"/>
+        <typeAlias type="com.example.researchlab.investment.model.vo.MyStockList" alias="myStockList"/>
+        <typeAlias type="com.example.researchlab.investment.model.vo.StockItem" alias="stockItem"/>
+    </typeAliases>
 
-	<settings>
-		<setting name="jdbcTypeForNull" value="NULL"/>
-	</settings>
-<!-- 이유는 모르겠지만 typeAliases가 매퍼파일과 연동되지않음-->
-	<typeAliases>
-		<typeAlias type="com.example.researchlab.member.model.vo.Member" alias="member"/>
-	</typeAliases>
-
-	<mappers>
-		<mapper resource="mybatis/mapper/member/member-mapper.xml"/>
-	</mappers>
-
+    <mappers>
+        <mapper resource="mybatis/mapper/member/member-mapper.xml"/>
+        <mapper resource="mybatis/mapper/investment/investment-mapper.xml"/>
+    </mappers>
 </configuration>

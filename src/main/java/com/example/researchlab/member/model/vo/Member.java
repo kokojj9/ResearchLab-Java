@@ -7,7 +7,6 @@ import lombok.*;
 @AllArgsConstructor @NoArgsConstructor @Getter @Setter @ToString
 public class Member {
 
-
     String memberNo;
     @NotBlank
     String memberId;

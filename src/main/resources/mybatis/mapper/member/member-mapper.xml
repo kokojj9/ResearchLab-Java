@@ -5,7 +5,7 @@
 
 <mapper namespace="com.example.researchlab.member.model.dao.MemberMapper">
 
-	<resultMap id="memberResultSet" type="com.example.researchlab.member.model.vo.Member">
+	<resultMap id="memberResultSet" type="member">
 		<result column="MEMBER_NO"     property="memberNo"/>
 		<result column="MEMBER_ID"     property="memberId"/>
 		<result column="MEMBER_PWD"    property="memberPwd"/>
@@ -14,7 +14,7 @@
 		<result column="STATUS"        property="status"/>
 	</resultMap>
 
-	<select id="login" parameterType="com.example.researchlab.member.model.vo.Member" resultMap="memberResultSet">
+	<select id="login" parameterType="member" resultMap="memberResultSet">
 		SELECT
 			   MEMBER_NO,
 			   MEMBER_ID,
@@ -29,7 +29,7 @@
 			   STATUS = 'Y'
 	</select>
 
-	<insert id="enrollMember" parameterType="com.example.researchlab.member.model.vo.Member">
+	<insert id="enrollMember" parameterType="member">
 		INSERT
 		  INTO
 			   TB_MEMBER
