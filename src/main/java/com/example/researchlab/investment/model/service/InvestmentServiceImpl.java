@@ -1,5 +1,8 @@
 package com.example.researchlab.investment.model.service;
 
+import com.example.researchlab.investment.model.dao.InvestmentMapper;
+import com.example.researchlab.investment.model.vo.MyStockList;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -10,10 +13,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 @Service
-public class InvestmentServiceImpl implements InvestmentService{
+@RequiredArgsConstructor
+public class InvestmentServiceImpl implements InvestmentService {
 
     @Value("${SERVICE_KEY}")
     private String SERVICE_KEY;
+
+    private final InvestmentMapper investmentMapper;
+
     @Override
     public String getStockInfo(String encodedStockName) throws IOException {
         HttpURLConnection urlConnection = getHttpURLConnection(encodedStockName);
@@ -44,5 +51,10 @@ public class InvestmentServiceImpl implements InvestmentService{
         HttpURLConnection urlConnection = (HttpURLConnection) requestUrl.openConnection();
         urlConnection.setRequestMethod("GET");
         return urlConnection;
+    }
+
+    @Override
+    public int saveStockList(MyStockList stockList) {
+        return investmentMapper.saveStockList(stockList);
     }
 }

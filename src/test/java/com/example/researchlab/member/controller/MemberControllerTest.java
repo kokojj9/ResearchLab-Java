@@ -59,8 +59,8 @@ public class MemberControllerTest {
     @Test
     public void testLoginFail() {
         Member member = new Member();
-        member.setMemberId("testuser");
-        member.setMemberPwd("wrongpassword");
+        member.setMemberId("testUser");
+        member.setMemberPwd("password");
 
         when(bindingResult.hasErrors()).thenReturn(false);
         when(memberService.login(any(Member.class))).thenReturn(null);
@@ -75,7 +75,7 @@ public class MemberControllerTest {
     @Test
     public void testEnrollSuccess() {
         Member member = new Member();
-        member.setMemberId("testuser");
+        member.setMemberId("testUser");
         member.setMemberPwd("password");
 
         when(bindingResult.hasErrors()).thenReturn(false);
@@ -91,7 +91,7 @@ public class MemberControllerTest {
     @Test
     public void testEnrollFail() {
         Member member = new Member();
-        member.setMemberId("testuser");
+        member.setMemberId("testUser");
         member.setMemberPwd("password");
 
         when(bindingResult.hasErrors()).thenReturn(false);

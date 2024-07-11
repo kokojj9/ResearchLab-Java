@@ -2,15 +2,12 @@ package com.example.researchlab.investment.model.vo;
 
 import lombok.*;
 
-import java.util.List;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @ToString
-public class MyStockList {
-    private String listName;
-    private List<StockItem> items;
-
+public class StockItem {
+    private String srtnCd;
+    private String itmsNm;
 }

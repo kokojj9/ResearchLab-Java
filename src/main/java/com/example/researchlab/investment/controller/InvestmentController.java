@@ -1,8 +1,12 @@
 package com.example.researchlab.investment.controller;
 
+import com.example.researchlab.common.model.vo.ResponseData;
 import com.example.researchlab.investment.model.service.InvestmentService;
 import com.example.researchlab.investment.model.vo.MyStockList;
+import com.example.researchlab.template.ResponseTemplate;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -14,6 +18,9 @@ import java.net.URLEncoder;
 public class InvestmentController {
 
     private final InvestmentService investmentService;
+
+    private final ResponseTemplate responseTemplate;
+
     @GetMapping(value = "/findStock", produces = "application/json; charset=UTF-8")
     public String getStockInfo(@RequestParam String stockName) throws IOException {
         // 여러날짜 데이터가 조회되어 가장 최근날짜 데이터만 필터링하는 로직은 프론트에서 구성함
@@ -23,14 +30,17 @@ public class InvestmentController {
         return investmentService.getStockInfo(encodedStockName);
     }
 
-    @PostMapping("/insertSetting")
-    public String insertUserSetting(@RequestBody MyStockList stocklist){
+    @PostMapping("/saveList")
+    public ResponseEntity<ResponseData<Object>> saveStockList(@RequestBody MyStockList stocklist) {
         // 사용자 설정 목록 저장 메소드
-        
-        return null;
+        if (stocklist != null) {
+            int result = investmentService.saveStockList(stocklist);
+            if (result > 0) {
+                return responseTemplate.success("리스트 저장 성공", null, HttpStatus.OK);
+            }
+        }
+        return responseTemplate.fail("리스트 저장 실패", HttpStatus.BAD_REQUEST);
     }
-
-
 
 
 }
