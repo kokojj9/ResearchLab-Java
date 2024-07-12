@@ -1,9 +1,9 @@
 package com.example.researchlab.member.controller;
 
 import com.example.researchlab.common.model.vo.ResponseData;
-import com.example.researchlab.template.ResponseTemplate;
 import com.example.researchlab.member.model.service.MemberService;
 import com.example.researchlab.member.model.vo.Member;
+import com.example.researchlab.template.ResponseTemplate;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -71,16 +71,16 @@ public class MemberController {
         if (br.hasErrors()) {
             logger.warn("유효성 검사 오류: {}", br.getAllErrors());
             return responseTemplate.fail("잘못된 정보", HttpStatus.BAD_REQUEST);
-        } else {
-            int result = memberService.enrollMember(member);
-
-            if (result > 0) {
-                logger.info("회원가입 성공: {}", member.getMemberId());
-                return responseTemplate.success("회원가입 성공", null, HttpStatus.OK);
-            }
-
-            logger.warn("회원가입 실패: {}", member.getMemberId());
-            return responseTemplate.success("회원가입 실패", null, HttpStatus.OK);
         }
+
+        int result = memberService.enrollMember(member);
+
+        if (result > 0) {
+            logger.info("회원가입 성공: {}", member.getMemberId());
+            return responseTemplate.success("회원가입 성공", null, HttpStatus.OK);
+        }
+
+        logger.warn("회원가입 실패: {}", member.getMemberId());
+        return responseTemplate.success("회원가입 실패", null, HttpStatus.OK);
     }
 }

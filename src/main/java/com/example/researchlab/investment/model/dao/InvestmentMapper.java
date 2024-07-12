@@ -1,9 +1,12 @@
 package com.example.researchlab.investment.model.dao;
 
-import com.example.researchlab.investment.model.vo.MyStockList;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.HashMap;
 
 @Mapper
 public interface InvestmentMapper {
-    int saveStockList(MyStockList stockList);
+    int saveStockList(HashMap<String, Object> userStockList);
+
+    int saveStockListItem(HashMap<String, Object> userStockList);
 }
