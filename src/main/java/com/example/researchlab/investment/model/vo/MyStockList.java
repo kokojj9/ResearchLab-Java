@@ -10,6 +10,7 @@ import java.util.List;
 @Setter
 @ToString
 public class MyStockList {
+    private int settingNo;
     private String listName;
     private List<StockItem> items;
 

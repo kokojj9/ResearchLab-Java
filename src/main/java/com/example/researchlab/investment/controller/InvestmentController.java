@@ -3,7 +3,10 @@ package com.example.researchlab.investment.controller;
 import com.example.researchlab.common.model.vo.ResponseData;
 import com.example.researchlab.investment.model.service.InvestmentService;
 import com.example.researchlab.investment.model.vo.MyStockList;
+import com.example.researchlab.member.controller.MemberController;
+import com.example.researchlab.member.model.vo.Member;
 import com.example.researchlab.template.ResponseTemplate;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/investment")
@@ -18,8 +23,8 @@ import java.net.URLEncoder;
 public class InvestmentController {
 
     private final InvestmentService investmentService;
-
     private final ResponseTemplate responseTemplate;
+    private final MemberController memberController;
 
     @GetMapping(value = "/findStock", produces = "application/json; charset=UTF-8")
     public String getStockInfo(@RequestParam String stockName) throws IOException {
@@ -31,15 +36,26 @@ public class InvestmentController {
     }
 
     @PostMapping("/saveList")
-    public ResponseEntity<ResponseData<Object>> saveStockList(@RequestBody MyStockList stocklist) {
+    public ResponseEntity<ResponseData<Object>> saveStockList(@RequestBody MyStockList stockList, HttpSession session) {
         // 사용자 설정 목록 저장 메소드
-        if (stocklist != null) {
-            int result = investmentService.saveStockList(stocklist);
+        Member loginMember = (Member) session.getAttribute("loginMember");
+
+        if (loginMember != null && stockList != null) {
+            int result = saveUserStock(stockList, loginMember);
+
             if (result > 0) {
                 return responseTemplate.success("리스트 저장 성공", null, HttpStatus.OK);
             }
         }
-        return responseTemplate.fail("리스트 저장 실패", HttpStatus.BAD_REQUEST);
+
+        return responseTemplate.fail("잘못된 요청", HttpStatus.BAD_REQUEST);
+    }
+
+    private int saveUserStock(MyStockList stockList, Member loginMember) {
+        HashMap<String, Object> userStockList = new HashMap<>();
+        userStockList.put("memberNo", loginMember.getMemberNo());
+        userStockList.put("stockList", stockList);
+        return investmentService.saveStockList(userStockList);
     }
 
 

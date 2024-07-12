@@ -5,13 +5,51 @@
 
 <mapper namespace="com.example.researchlab.investment.model.dao.InvestmentMapper">
 
-    <resultMap id="stockListResultSet" type="myStockList">
-        <result column="SETTING_NAME" property="listName"/>
-        <collection property="items" ofType="stockItem">
-            <result column="SERIAL_NO" property="srtnCd"/>
+    <resultMap id="stockListResultSet"  type="myStockList">
+        <result column="SETTING_NO"     property="settingNo"/>
+        <result column="SETTING_NAME"   property="listName"/>
+        <collection property="items"    ofType="stockItem">
+            <result column="SERIAL_NO"  property="srtnCd"/>
             <result column="STOCK_NAME" property="itmsNm"/>
         </collection>
     </resultMap>
 
+    <insert id="saveStockList" parameterType="map" useGeneratedKeys="true"
+            keyProperty="stockList.settingNo" keyColumn="SETTING_NO">
+        INSERT
+          INTO
+                TB_STOCKWISHLIST
+                (
+                SETTING_NO,
+                MEMBER_NO,
+                SETTING_NAME
+                )
+        VALUES
+                (
+                SEQ_SLNO.NEXTVAL,
+                #{memberNo},
+                #{stockList.listName}
+                )
+    </insert>
+
+<!-- 오라클DB에서 myBatis INSERT ALL 사용 시 insert가 아니라 update 태그를 사용해야함 SQL command not properly ended 발생 -->
+    <update id="saveStockListItem" parameterType="map">
+        <foreach collection="stockList.items" item="item"
+                 separator=" " open="INSERT ALL" close="SELECT * FROM DUAL">
+              INTO
+                   TB_STOCKLIST
+                   (
+                   SETTING_NO,
+                   SERIAL_NO,
+                   STOCK_NAME
+                   )
+            VALUES
+                   (
+                   #{stockList.settingNo},
+                   #{item.srtnCd},
+                   #{item.itmsNm}
+                   )
+        </foreach>
+    </update>
 
 </mapper>
