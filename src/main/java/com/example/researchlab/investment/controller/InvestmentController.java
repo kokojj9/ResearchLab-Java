@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -39,19 +41,19 @@ public class InvestmentController {
     public ResponseEntity<ResponseData<Object>> saveStockList(@RequestBody MyStockList stockList, HttpSession session) {
         // 사용자 설정 목록 저장 메소드
         Member loginMember = (Member) session.getAttribute("loginMember");
-
+        List<MyStockList> list = new ArrayList<>();
         if (loginMember != null && stockList != null) {
-            int result = saveUserStock(stockList, loginMember);
+            list = saveUserStock(stockList, loginMember);
 
-            if (result > 0) {
-                return responseTemplate.success("리스트 저장 성공", null, HttpStatus.OK);
+            if (list != null) {
+                return responseTemplate.success("리스트 저장 성공", list, HttpStatus.OK);
             }
         }
 
         return responseTemplate.fail("잘못된 요청", HttpStatus.BAD_REQUEST);
     }
 
-    private int saveUserStock(MyStockList stockList, Member loginMember) {
+    private List<MyStockList> saveUserStock(MyStockList stockList, Member loginMember) {
         HashMap<String, Object> userStockList = new HashMap<>();
         userStockList.put("memberNo", loginMember.getMemberNo());
         userStockList.put("stockList", stockList);
