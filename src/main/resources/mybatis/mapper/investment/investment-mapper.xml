@@ -52,4 +52,19 @@
         </foreach>
     </update>
 
+    <select id="getStockList" parameterType="string" resultMap="stockListResultSet">
+        SELECT
+               SETTING_NO,
+               SETTING_NAME,
+               SERIAL_NO,
+               STOCK_NAME
+          FROM
+               TB_STOCKWISHLIST
+          LEFT
+          JOIN
+               TB_STOCKLIST USEING(SETTING_NO)
+         WHERE
+               MEMBER_NO = #{memberNo}
+    </select>
+
 </mapper>
