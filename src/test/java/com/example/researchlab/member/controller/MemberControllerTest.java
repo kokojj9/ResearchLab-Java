@@ -42,7 +42,7 @@ public class MemberControllerTest {
     @Test
     public void testLoginSuccess() {
         Member member = new Member();
-        member.setMemberId("testuser");
+        member.setMemberId("testUser");
         member.setMemberPwd("password");
 
         when(bindingResult.hasErrors()).thenReturn(false);
