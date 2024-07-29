@@ -17,7 +17,6 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/investment")
@@ -42,6 +41,7 @@ public class InvestmentController {
         // 사용자 설정 목록 저장 메소드
         Member loginMember = (Member) session.getAttribute("loginMember");
         List<MyStockList> list = new ArrayList<>();
+
         if (loginMember != null && stockList != null) {
             list = saveUserStock(stockList, loginMember);
 
