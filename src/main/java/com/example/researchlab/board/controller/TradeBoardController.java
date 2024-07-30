@@ -7,9 +7,13 @@ import com.example.researchlab.common.model.vo.ResponseData;
 import com.example.researchlab.template.ResponseTemplate;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -27,12 +31,16 @@ public class TradeBoardController {
     private final TradeBoardService tradeBoardService;
     private final ResponseTemplate responseTemplate;
 
+    @Value("${file.upload-dir}")
+    private String uploadDir;
     // 글 조회
     // 글 쓰기
     @PostMapping("/posts")
-    public ResponseEntity<ResponseData<Object>> saveTradePost(@RequestBody TradePost tradePost,
+    public ResponseEntity<ResponseData<Object>> saveTradePost(@RequestPart("tradePost") TradePost tradePost,
                                                               @RequestPart("images") List<MultipartFile> images,
                                                               HttpSession session) throws IOException {
+        System.out.println(tradePost);
+        System.out.println(images);
         ResponseEntity<ResponseData<Object>> rd = null;
         if (tradePost.getTitle().isEmpty()) {
             rd = responseTemplate.fail("작성 실패", HttpStatus.BAD_REQUEST);
@@ -66,11 +74,16 @@ public class TradeBoardController {
         int random = (int) (Math.random() * 90000) + 10000;
         String changeName = currentTime + "_" + random + ext;
 
-        String savePath = session.getServletContext().getRealPath("/resources/upfiles/boardImages/");
+        String savePath = uploadDir;
+        File folder = new File(savePath);
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
 
-        upfile.transferTo(new File(savePath + changeName));
+        File dest = new File(savePath, changeName);
+        upfile.transferTo(dest);
 
-        return savePath + changeName;
+        return "upfiles/boardImages/" + changeName;
     }
 
 
