@@ -13,7 +13,6 @@ import java.util.List;
 public class TradePost {
 
     private int postNo;
-    @NonNull
     private String title;
     private String content;
     private String writer;
