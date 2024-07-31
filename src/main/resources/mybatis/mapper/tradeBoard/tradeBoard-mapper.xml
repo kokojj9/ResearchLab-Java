@@ -5,7 +5,92 @@
 
 <mapper namespace="com.example.researchlab.board.model.dao.TradeMapper">
 
+    <resultMap id="tradePostResultMap"      type="tradePost">
+        <result property="postNo"           column="POST_NO" />
+        <result property="title"            column="TITLE" />
+        <result property="content"          column="CONTENT" />
+        <result property="writer"           column="MEMBER_ID" />
+        <result property="createDate"       column="CREATE_DATE" />
+        <result property="updateDate"       column="UPDATE_DATE" />
+        <collection property="imageList"    ofType="postImage">
+            <result property="imageNo"      column="IMAGE_NO" />
+            <result property="postNo"       column="POST_NO" />
+            <result property="originalName" column="ORIGINAL_NAME" />
+            <result property="storedName"   column="STORED_NAME" />
+            <result property="createDate"   column="CREATE_DATE" />
+        </collection>
+    </resultMap>
 
+    <select id="countAllPosts" resultType="int">
+        SELECT COUNT(*) FROM TB_TRADEPOST
+    </select>
 
+    <select id="findAllPosts" parameterType="map" resultMap="tradePostResultMap" >
+        SELECT
+               *
+          FROM (
+               SELECT
+                      tp.POST_NO,
+                      TITLE,
+                      CONTENT,
+                      MEMBER_ID,
+                      tp.CREATE_DATE,
+                      UPDATE_DATE,
+                      IMAGE_NO,
+                      STORED_NAME,
+                      ROW_NUMBER() OVER (ORDER BY tp.CREATE_DATE DESC) AS RNUM
+                 FROM
+                      TB_TRADEPOST tp
+                 LEFT
+                 JOIN
+                      TB_IMAGES ti ON(tp.POST_NO = ti.POST_NO)
+               )
+         WHERE RNUM BETWEEN #{offset} + 1 AND #{offset} + #{pageSize}
+    </select>
+
+    <insert id="saveTradePost" parameterType="tradePost" useGeneratedKeys="true"
+            keyProperty="tradePost.postNo" keyColumn="POST_NO">
+        INSERT
+          INTO
+               TB_TRADEPOST
+               (
+               POST_NO,
+               TITLE,
+               CONTENT,
+               MEMBER_ID,
+               CREATE_DATE
+               )
+        VALUES
+               (
+               SEQ_POSTNO.NEXTVAL,
+               #{title},
+               #{content},
+               #{writer},
+               SYSDATE
+               )
+    </insert>
+
+    <insert id="saveImage" parameterType="tradePost">
+        <foreach collection="imageList" item="image">
+        INSERT
+          INTO
+               TB_IMAGES
+               (
+               IMAGE_NO,
+               POST_NO,
+               ORIGINAL_NAME,
+               STORED_NAME,
+               CREATE_DATE
+               )
+        VALUES
+               (
+               SEQ_IMGNO.NEXTVAL,
+               #{postNo},
+               #{image.originalName},
+               #{image.storedName},
+               SYSDATE
+               )
+        </foreach>
+    </insert>
 
 </mapper>
