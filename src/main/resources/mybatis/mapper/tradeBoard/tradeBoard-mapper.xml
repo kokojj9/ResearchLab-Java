@@ -49,7 +49,7 @@
     </select>
 
     <insert id="saveTradePost" parameterType="tradePost" useGeneratedKeys="true"
-            keyProperty="tradePost.postNo" keyColumn="POST_NO">
+            keyProperty="postNo" keyColumn="POST_NO">
         INSERT
           INTO
                TB_TRADEPOST
