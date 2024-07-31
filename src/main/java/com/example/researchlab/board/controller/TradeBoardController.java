@@ -37,14 +37,14 @@ public class TradeBoardController {
     // 글 쓰기
     @PostMapping("/posts")
     public ResponseEntity<ResponseData<Object>> saveTradePost(@RequestPart("tradePost") TradePost tradePost,
-                                                              @RequestPart("images") List<MultipartFile> images,
+                                                              @RequestPart(value = "images", required = false) List<MultipartFile> images,
                                                               HttpSession session) throws IOException {
         ResponseEntity<ResponseData<Object>> rd = null;
 
         if (tradePost.getTitle().isEmpty()) {
             rd = responseTemplate.fail("작성 실패", HttpStatus.BAD_REQUEST);
         } else {
-            if(!images.get(0).getOriginalFilename().equals("")){
+            if(images != null){
                 List<PostImage> imageList = new ArrayList<>();
 
                 for (MultipartFile image : images) {

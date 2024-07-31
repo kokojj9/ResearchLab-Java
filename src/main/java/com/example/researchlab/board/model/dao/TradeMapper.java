@@ -10,5 +10,5 @@ import java.util.List;
 public interface TradeMapper {
     int saveTradePost(TradePost tradePost);
 
-    int saveImage(List<PostImage> imageList);
+    int saveImage(TradePost tradePost);
 }
