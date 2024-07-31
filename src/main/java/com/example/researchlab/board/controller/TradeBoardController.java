@@ -8,6 +8,8 @@ import com.example.researchlab.common.model.vo.ResponseData;
 import com.example.researchlab.template.ResponseTemplate;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,15 +30,16 @@ public class TradeBoardController {
 
     // 글 조회
     @GetMapping
-    public ResponseEntity<ResponseData<Object>> selectTradePosts(){
-        return null;
+    public ResponseEntity<ResponseData<Object>> selectTradePosts(@RequestParam int page, @RequestParam int size){
+        Pageable pageable = PageRequest.of(page, size);
+        return tradeBoardService.selectTradePosts(pageable);
     }
     // 글 쓰기
     @PostMapping("/posts")
     public ResponseEntity<ResponseData<Object>> saveTradePost(@RequestPart("tradePost") TradePost tradePost,
                                                               @RequestPart(value = "images", required = false) List<MultipartFile> images,
                                                               HttpSession session) throws IOException {
-        ResponseEntity<ResponseData<Object>> rd = null;
+        ResponseEntity<ResponseData<Object>> rd;
 
         if (tradePost.getTitle().isEmpty()) {
             rd = responseTemplate.fail("작성 실패", HttpStatus.BAD_REQUEST);
@@ -57,13 +60,11 @@ public class TradeBoardController {
     private List<PostImage> setImages(HttpSession session, List<MultipartFile> images) throws IOException {
         List<PostImage> imageList = new ArrayList<>();
         for (MultipartFile image : images) {
-            if (!image.isEmpty()) {
-                String storedFileName = boardFileService.saveFile(session, image);
-                PostImage postImage = new PostImage();
-                postImage.setOriginalName(image.getOriginalFilename());
-                postImage.setStoredName(storedFileName);
-                imageList.add(postImage);
-            }
+            String storedFileName = boardFileService.saveFile(session, image);
+            PostImage postImage = new PostImage();
+            postImage.setOriginalName(image.getOriginalFilename());
+            postImage.setStoredName(storedFileName);
+            imageList.add(postImage);
         }
         return imageList;
     }
