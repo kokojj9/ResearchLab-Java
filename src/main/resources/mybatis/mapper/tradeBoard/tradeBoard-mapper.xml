@@ -21,7 +21,35 @@
         </collection>
     </resultMap>
 
-    <insert id="saveTradePost" parameterType="tradePost" useGeneratedKeys="true">
+    <select id="countAllPosts" resultType="int">
+        SELECT COUNT(*) FROM TB_TRADEPOST
+    </select>
+
+    <select id="findAllPosts" parameterType="map" resultMap="tradePostResultMap" >
+        SELECT
+               *
+          FROM (
+               SELECT
+                      tp.POST_NO,
+                      TITLE,
+                      CONTENT,
+                      MEMBER_ID,
+                      tp.CREATE_DATE,
+                      UPDATE_DATE,
+                      IMAGE_NO,
+                      STORED_NAME,
+                      ROW_NUMBER() OVER (ORDER BY tp.CREATE_DATE DESC) AS RNUM
+                 FROM
+                      TB_TRADEPOST tp
+                 LEFT
+                 JOIN
+                      TB_IMAGES ti ON(tp.POST_NO = ti.POST_NO)
+               )
+         WHERE RNUM BETWEEN #{offset} + 1 AND #{offset} + #{pageSize}
+    </select>
+
+    <insert id="saveTradePost" parameterType="tradePost" useGeneratedKeys="true"
+            keyProperty="tradePost.postNo" keyColumn="POST_NO">
         INSERT
           INTO
                TB_TRADEPOST

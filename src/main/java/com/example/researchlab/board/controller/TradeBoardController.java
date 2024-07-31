@@ -8,6 +8,7 @@ import com.example.researchlab.common.model.vo.ResponseData;
 import com.example.researchlab.template.ResponseTemplate;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -30,9 +31,8 @@ public class TradeBoardController {
 
     // 글 조회
     @GetMapping
-    public ResponseEntity<ResponseData<Object>> selectTradePosts(@RequestParam int page, @RequestParam int size){
-        Pageable pageable = PageRequest.of(page, size);
-        return tradeBoardService.selectTradePosts(pageable);
+    public Page<TradePost> selectTradePosts(@RequestParam int page, @RequestParam int size){
+        return tradeBoardService.selectTradePosts(page, size);
     }
     // 글 쓰기
     @PostMapping("/posts")
