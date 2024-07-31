@@ -11,13 +11,16 @@
     </settings>
 
     <typeAliases>
-        <typeAlias type="com.example.researchlab.member.model.vo.Member" alias="member"/>
+        <typeAlias type="com.example.researchlab.member.model.vo.Member"          alias="member"/>
         <typeAlias type="com.example.researchlab.investment.model.vo.MyStockList" alias="myStockList"/>
-        <typeAlias type="com.example.researchlab.investment.model.vo.StockItem" alias="stockItem"/>
+        <typeAlias type="com.example.researchlab.investment.model.vo.StockItem"   alias="stockItem"/>
+        <typeAlias type="com.example.researchlab.board.model.vo.TradePost"        alias="tradePost" />
+        <typeAlias type="com.example.researchlab.board.model.vo.PostImage"        alias="postImage" />
     </typeAliases>
 
     <mappers>
         <mapper resource="mybatis/mapper/member/member-mapper.xml"/>
         <mapper resource="mybatis/mapper/investment/investment-mapper.xml"/>
+        <mapper resource="mybatis/mapper/tradeBoard/tradeBoard-mapper.xml"/>
     </mappers>
 </configuration>

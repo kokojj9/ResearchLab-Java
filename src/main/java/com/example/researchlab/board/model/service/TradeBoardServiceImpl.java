@@ -16,10 +16,15 @@ public class TradeBoardServiceImpl implements TradeBoardService{
     public int saveTradePost(TradePost tradePost) {
         int result = tradeMapper.saveTradePost(tradePost);
 
-        if(result > 0) {
+        if(result > 0 && tradePost.getImageList() != null) {
             result = tradeMapper.saveImage(tradePost.getImageList());
         }
 
         return result;
     }
+
+
+
+
+
 }

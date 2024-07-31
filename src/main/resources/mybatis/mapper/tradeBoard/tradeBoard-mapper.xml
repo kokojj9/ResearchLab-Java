@@ -5,7 +5,64 @@
 
 <mapper namespace="com.example.researchlab.board.model.dao.TradeMapper">
 
+    <resultMap id="tradePostResultMap"      type="tradePost">
+        <result property="postNo"           column="POST_NO" />
+        <result property="title"            column="TITLE" />
+        <result property="content"          column="CONTENT" />
+        <result property="writer"           column="MEMBER_ID" />
+        <result property="createDate"       column="CREATE_DATE" />
+        <result property="updateDate"       column="UPDATE_DATE" />
+        <collection property="imageList"    ofType="postImage">
+            <result property="imageNo"      column="IMAGE_NO" />
+            <result property="postNo"       column="POST_NO" />
+            <result property="originalName" column="ORIGINAL_NAME" />
+            <result property="storedName"   column="STORED_NAME" />
+            <result property="createDate"   column="CREATE_DATE" />
+        </collection>
+    </resultMap>
 
+    <insert id="saveTradePost" parameterType="tradePost" useGeneratedKeys="true">
+        INSERT
+          INTO
+               TB_TRADEPOST
+               (
+               POST_NO,
+               TITLE,
+               CONTENT,
+               MEMBER_ID,
+               CREATE_DATE
+               )
+        VALUES
+               (
+               SEQ_POSTNO.NEXTVAL,
+               #{title},
+               #{content},
+               #{writer},
+               SYSDATE
+               )
+    </insert>
 
+    <insert id="saveImage" parameterType="tradePost">
+        <foreach collection="imageList" item="image">
+        INSERT
+          INTO
+               TB_IMAGES
+               (
+               IMAGE_NO,
+               POST_NO,
+               ORIGINAL_NAME,
+               STORED_NAME,
+               CREATE_DATE
+               )
+        VALUES
+               (
+               SEQ_IMGNO.NEXTVAL,
+               #{postNo},
+               #{image.originalName},
+               #{image.storedName},
+               SYSDATE
+               )
+        </foreach>
+    </insert>
 
 </mapper>
