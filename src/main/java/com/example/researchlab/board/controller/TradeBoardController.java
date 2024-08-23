@@ -31,27 +31,28 @@ public class TradeBoardController {
 
     // 글 조회
     @GetMapping
-    public Page<TradePost> selectTradePosts(@RequestParam int page, @RequestParam int size){
+    public Page<TradePost> selectTradePosts(@RequestParam int page, @RequestParam int size) {
         return tradeBoardService.selectTradePosts(page, size);
     }
+
     // 글 쓰기
     @PostMapping("/posts")
-    public ResponseEntity<ResponseData<Object>> saveTradePost(@RequestPart("tradePost") TradePost tradePost,
+    public ResponseEntity<ResponseData<Object>> saveTradePost(@RequestPart("tradePost") TradePost post,
                                                               @RequestPart(value = "images", required = false) List<MultipartFile> images,
                                                               HttpSession session) throws IOException {
         ResponseEntity<ResponseData<Object>> rd;
 
-        if (tradePost.getTitle().isEmpty()) {
+        if (post.getTitle().isEmpty()) {
             rd = responseTemplate.fail("작성 실패", HttpStatus.BAD_REQUEST);
         } else {
-            if(images != null){
-                tradePost.setImageList(setImages(session, images));
+            if (images != null) {
+                post.setImageList(setImages(session, images));
             }
 
-            int result = tradeBoardService.saveTradePost(tradePost);
+            int result = tradeBoardService.saveTradePost(post);
 
             rd = result > 0 ? responseTemplate.success("작성 성공", null, HttpStatus.OK) :
-                              responseTemplate.fail("작성 실패", HttpStatus.BAD_REQUEST);
+                    responseTemplate.fail("작성 실패", HttpStatus.BAD_REQUEST);
         }
 
         return rd;
@@ -70,6 +71,11 @@ public class TradeBoardController {
     }
 
     // 상세 조회
+    @GetMapping("{postNo}")
+    public TradePost selectPostDetail(@RequestParam int postNo){
+        // 상세조회 후 반환
+        return null;
+    }
     // 글 수정
     // 글 삭제
 
