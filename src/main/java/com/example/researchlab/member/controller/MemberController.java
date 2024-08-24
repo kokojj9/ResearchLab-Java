@@ -24,25 +24,33 @@ public class MemberController {
     private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
 
     @PostMapping("/login")
-    public ResponseEntity<ResponseData<Object>> login(@RequestBody @Valid Member member, HttpSession session, BindingResult br) {
+    public ResponseData<Object> login(@RequestBody @Valid Member member, BindingResult br) {
         logger.info("회원 로그인 시도: {}", member.getMemberId());
+
+        ResponseData.ResponseDataBuilder<Object> responseBuilder = ResponseData.builder();
 
         if (br.hasErrors()) {
             logger.warn("유효성 검사 오류: {}", br.getAllErrors());
-            return responseTemplate.fail("잘못된 정보", HttpStatus.BAD_REQUEST);
+            responseBuilder.responseCode("NN")
+                           .resultMessage("잘못된 로그인 정보")
+                           .data(null);
         } else {
             Member loginMember = memberService.login(member);
-
-            if (loginMember != null) {
-                loginMember.setMemberPwd(null);
-                session.setAttribute("loginMember", loginMember);
+            if (loginMember == null) {
+                logger.warn("존재하지 않는 회원: {}", member.getMemberId());
+                responseBuilder.responseCode("NN")
+                               .resultMessage("존재하지 않는 회원")
+                               .data(null);
+            } else {
                 logger.info("로그인 성공: {}", member.getMemberId());
-                return responseTemplate.success("로그인 성공", null, HttpStatus.OK);
+                loginMember.setMemberPwd(null);
+                responseBuilder.responseCode("YY")
+                               .resultMessage("로그인 성공")
+                               .data(loginMember);
             }
-
-            logger.warn("로그인 실패: {}", member.getMemberId());
-            return responseTemplate.success("존재하지 않는 회원", null, HttpStatus.OK);
         }
+
+        return responseBuilder.build();
     }
 
     @GetMapping("/getSession")
