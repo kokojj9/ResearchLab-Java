@@ -2,8 +2,8 @@ package com.example.researchlab.board.controller;
 
 import com.example.researchlab.board.model.service.BoardFileService;
 import com.example.researchlab.board.model.service.TradeBoardService;
-import com.example.researchlab.board.model.vo.Post;
 import com.example.researchlab.board.model.vo.PostImage;
+import com.example.researchlab.board.model.vo.Post;
 import com.example.researchlab.common.model.vo.ResponseData;
 import com.example.researchlab.template.ResponseTemplate;
 import jakarta.servlet.http.HttpSession;
