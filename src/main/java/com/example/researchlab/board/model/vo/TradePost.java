@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 @Getter
 @ToString
-public class TradePost {
+public class Post {
 
     private int postNo;
     private String title;

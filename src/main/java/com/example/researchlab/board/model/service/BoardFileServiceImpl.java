@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Service
-public class BoardFileServiceImpl implements BoardFileService{
+public class BoardFileServiceImpl implements BoardFileService {
 
     @Value("${file.upload-dir}")
     private String uploadDir;
@@ -27,21 +27,12 @@ public class BoardFileServiceImpl implements BoardFileService{
 
         String savePath = uploadDir;
         File folder = new File(savePath);
-        if (!folder.exists()) {
-            folder.mkdirs();
-        }
 
-        File dest = new File(savePath, changeName);
-        upfile.transferTo(dest);
+        File file = new File(savePath, changeName);
+        upfile.transferTo(file);
 
         return "upfiles/boardImages/" + changeName;
     }
-
-
-
-
-
-
 
 
 }

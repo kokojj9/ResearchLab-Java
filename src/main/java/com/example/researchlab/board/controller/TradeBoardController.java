@@ -2,15 +2,13 @@ package com.example.researchlab.board.controller;
 
 import com.example.researchlab.board.model.service.BoardFileService;
 import com.example.researchlab.board.model.service.TradeBoardService;
+import com.example.researchlab.board.model.vo.Post;
 import com.example.researchlab.board.model.vo.PostImage;
-import com.example.researchlab.board.model.vo.TradePost;
 import com.example.researchlab.common.model.vo.ResponseData;
 import com.example.researchlab.template.ResponseTemplate;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,27 +29,36 @@ public class TradeBoardController {
 
     // 글 조회
     @GetMapping
-    public Page<TradePost> selectTradePosts(@RequestParam int page, @RequestParam int size){
+<<<<<<< Updated upstream
+    public Page<TradePost> selectTradePosts(@RequestParam int page, @RequestParam int size) {
+=======
+    public Page<Post> selectTradePosts(@RequestParam int page, @RequestParam int size) {
+>>>>>>> Stashed changes
         return tradeBoardService.selectTradePosts(page, size);
     }
+
     // 글 쓰기
     @PostMapping("/posts")
-    public ResponseEntity<ResponseData<Object>> saveTradePost(@RequestPart("tradePost") TradePost tradePost,
+<<<<<<< Updated upstream
+    public ResponseEntity<ResponseData<Object>> saveTradePost(@RequestPart("tradePost") TradePost post,
+=======
+    public ResponseEntity<ResponseData<Object>> saveTradePost(@RequestPart("tradePost") Post post,
+>>>>>>> Stashed changes
                                                               @RequestPart(value = "images", required = false) List<MultipartFile> images,
                                                               HttpSession session) throws IOException {
         ResponseEntity<ResponseData<Object>> rd;
 
-        if (tradePost.getTitle().isEmpty()) {
+        if (post.getTitle().isEmpty()) {
             rd = responseTemplate.fail("작성 실패", HttpStatus.BAD_REQUEST);
         } else {
-            if(images != null){
-                tradePost.setImageList(setImages(session, images));
+            if (images != null) {
+                post.setImageList(setImages(session, images));
             }
 
-            int result = tradeBoardService.saveTradePost(tradePost);
+            int result = tradeBoardService.saveTradePost(post);
 
             rd = result > 0 ? responseTemplate.success("작성 성공", null, HttpStatus.OK) :
-                              responseTemplate.fail("작성 실패", HttpStatus.BAD_REQUEST);
+                    responseTemplate.fail("작성 실패", HttpStatus.BAD_REQUEST);
         }
 
         return rd;
@@ -70,6 +77,11 @@ public class TradeBoardController {
     }
 
     // 상세 조회
+    @GetMapping("{postNo}")
+    public TradePost selectPostDetail(@RequestParam int postNo){
+        // 상세조회 후 반환
+        return null;
+    }
     // 글 수정
     // 글 삭제
 
