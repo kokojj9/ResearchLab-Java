@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 @Getter
 @ToString
-public class TradePost {
+public class Post {
 
     private int postNo;
     private String title;
@@ -19,4 +19,5 @@ public class TradePost {
     private Date createDate;
     private Date updateDate;
     private List<PostImage> imageList;
+  
 }
