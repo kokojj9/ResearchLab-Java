@@ -29,21 +29,13 @@ public class TradeBoardController {
 
     // 글 조회
     @GetMapping
-<<<<<<< Updated upstream
-    public Page<TradePost> selectTradePosts(@RequestParam int page, @RequestParam int size) {
-=======
     public Page<Post> selectTradePosts(@RequestParam int page, @RequestParam int size) {
->>>>>>> Stashed changes
         return tradeBoardService.selectTradePosts(page, size);
     }
 
     // 글 쓰기
     @PostMapping("/posts")
-<<<<<<< Updated upstream
-    public ResponseEntity<ResponseData<Object>> saveTradePost(@RequestPart("tradePost") TradePost post,
-=======
     public ResponseEntity<ResponseData<Object>> saveTradePost(@RequestPart("tradePost") Post post,
->>>>>>> Stashed changes
                                                               @RequestPart(value = "images", required = false) List<MultipartFile> images,
                                                               HttpSession session) throws IOException {
         ResponseEntity<ResponseData<Object>> rd;
@@ -78,7 +70,7 @@ public class TradeBoardController {
 
     // 상세 조회
     @GetMapping("{postNo}")
-    public TradePost selectPostDetail(@RequestParam int postNo){
+    public Post selectPostDetail(@RequestParam int postNo){
         // 상세조회 후 반환
         return null;
     }
