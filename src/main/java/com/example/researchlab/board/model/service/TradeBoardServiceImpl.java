@@ -1,7 +1,7 @@
 package com.example.researchlab.board.model.service;
 
 import com.example.researchlab.board.model.dao.TradeMapper;
-import com.example.researchlab.board.model.vo.TradePost;
+import com.example.researchlab.board.model.vo.Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -17,21 +17,21 @@ public class TradeBoardServiceImpl implements TradeBoardService {
 
     @Override
     @Transactional
-    public int saveTradePost(TradePost tradePost) {
-        int result = tradeMapper.saveTradePost(tradePost);
+    public int saveTradePost(Post post) {
+        int result = tradeMapper.saveTradePost(post);
 
-        if (result > 0 && !tradePost.getImageList().isEmpty()) {
-            result = tradeMapper.saveImage(tradePost);
+        if (result > 0 && !post.getImageList().isEmpty()) {
+            result = tradeMapper.saveImage(post);
         }
 
         return result;
     }
 
     @Override
-    public Page<TradePost> selectTradePosts(int page, int size) {
+    public Page<Post> selectTradePosts(int page, int size) {
         int offset = page * size;
 
-        List<TradePost> posts = tradeMapper.findAllPosts(size, offset);
+        List<Post> posts = tradeMapper.findAllPosts(size, offset);
         int total = tradeMapper.countAllPosts();
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("createDate").descending());

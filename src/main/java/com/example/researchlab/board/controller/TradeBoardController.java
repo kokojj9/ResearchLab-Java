@@ -2,15 +2,13 @@ package com.example.researchlab.board.controller;
 
 import com.example.researchlab.board.model.service.BoardFileService;
 import com.example.researchlab.board.model.service.TradeBoardService;
+import com.example.researchlab.board.model.vo.Post;
 import com.example.researchlab.board.model.vo.PostImage;
-import com.example.researchlab.board.model.vo.TradePost;
 import com.example.researchlab.common.model.vo.ResponseData;
 import com.example.researchlab.template.ResponseTemplate;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,13 +29,21 @@ public class TradeBoardController {
 
     // 글 조회
     @GetMapping
+<<<<<<< Updated upstream
     public Page<TradePost> selectTradePosts(@RequestParam int page, @RequestParam int size) {
+=======
+    public Page<Post> selectTradePosts(@RequestParam int page, @RequestParam int size) {
+>>>>>>> Stashed changes
         return tradeBoardService.selectTradePosts(page, size);
     }
 
     // 글 쓰기
     @PostMapping("/posts")
+<<<<<<< Updated upstream
     public ResponseEntity<ResponseData<Object>> saveTradePost(@RequestPart("tradePost") TradePost post,
+=======
+    public ResponseEntity<ResponseData<Object>> saveTradePost(@RequestPart("tradePost") Post post,
+>>>>>>> Stashed changes
                                                               @RequestPart(value = "images", required = false) List<MultipartFile> images,
                                                               HttpSession session) throws IOException {
         ResponseEntity<ResponseData<Object>> rd;

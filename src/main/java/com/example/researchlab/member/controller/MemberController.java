@@ -27,6 +27,7 @@ public class MemberController {
     public ResponseEntity<ResponseData<Object>> login(@RequestBody @Valid Member member, HttpSession session, BindingResult br) {
         logger.info("회원 로그인 시도: {}", member.getMemberId());
 
+<<<<<<< Updated upstream
         if (br.hasErrors()) {
             logger.warn("유효성 검사 오류: {}", br.getAllErrors());
             return responseTemplate.fail("잘못된 정보", HttpStatus.BAD_REQUEST);
@@ -64,9 +65,38 @@ public class MemberController {
         return responseTemplate.success("로그아웃 성공", null, HttpStatus.OK);
     }
 
+=======
+        ResponseData.ResponseDataBuilder<Object> responseDataBuilder = ResponseData.builder();
+
+        if (br.hasErrors()) {
+            logger.warn("유효성 검사 오류: {}", br.getAllErrors());
+            responseDataBuilder.responseCode("NN")
+                               .resultMessage("잘못된 로그인 정보")
+                                .data(null);
+        } else {
+            Member loginMember = memberService.login(member);
+            if (loginMember == null) {
+                logger.warn("존재하지 않는 회원: {}", member.getMemberId());
+                responseDataBuilder.responseCode("NN")
+                                   .resultMessage("존재하지 않는 회원")
+                                   .data(null);
+            } else {
+                logger.info("로그인 성공: {}", member.getMemberId());
+                loginMember.setMemberPwd(null);
+                responseDataBuilder.responseCode("YY")
+                                   .resultMessage("로그인 성공")
+                                   .data(loginMember);
+            }
+        }
+
+        return responseDataBuilder.build();
+    }
+
+>>>>>>> Stashed changes
     @PostMapping("/enroll")
     public ResponseEntity<ResponseData<Object>> enrollMember(@RequestBody @Valid Member member, BindingResult br) {
         logger.info("회원가입 시도: {}", member.getMemberId());
+<<<<<<< Updated upstream
 
         if (br.hasErrors()) {
             logger.warn("유효성 검사 오류: {}", br.getAllErrors());
@@ -82,5 +112,31 @@ public class MemberController {
 
         logger.warn("회원가입 실패: {}", member.getMemberId());
         return responseTemplate.success("회원가입 실패", null, HttpStatus.OK);
+=======
+        ResponseData.ResponseDataBuilder<Object> responseDataBuilder =  ResponseData.builder();
+
+        if (br.hasErrors()) {
+            logger.warn("유효성 검사 오류: {}", br.getAllErrors());
+            responseDataBuilder.responseCode("NN")
+                               .resultMessage("잘못된 회원가입 정보")
+                               .data(null);
+        } else {
+            int result = memberService.enrollMember(member);
+
+            if (result > 0) {
+                logger.info("회원가입 성공: {}", member.getMemberId());
+                responseDataBuilder.responseCode("YY")
+                                   .resultMessage("회원가입 성공")
+                                   .data(null);
+            } else {
+                logger.warn("회원가입 실패: {}", member.getMemberId());
+                responseDataBuilder.responseCode("NN")
+                                   .resultMessage("회원가입 실패")
+                                   .data(null);
+            }
+        }
+
+        return responseDataBuilder.build();
+>>>>>>> Stashed changes
     }
 }
