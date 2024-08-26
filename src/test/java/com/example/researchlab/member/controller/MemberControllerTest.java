@@ -55,4 +55,23 @@ public class MemberControllerTest {
         assertNull(((Member) rd.getData()).getMemberPwd()); // 비밀번호는 null이어야 함
     }
 
+    @Test
+    public void testLoginFail() {
+        Member member = new Member();
+        member.setMemberId("testUser");
+        member.setMemberPwd("password123");
+
+        when(memberService.login(any(Member.class))).thenReturn(null);
+        when(bindingResult.hasErrors()).thenReturn(false); // 유효성 검사 통과
+
+        // When
+        ResponseData<Object> rd = memberController.login(member, bindingResult);
+
+        // Then
+        verify(memberService).login(any(Member.class));
+        assertNotNull(rd);
+        assertEquals("NN", rd.getResponseCode());
+        assertEquals("존재하지 않는 회원", rd.getResultMessage());
+        assertNull(rd.getData());
+    }
 }
