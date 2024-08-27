@@ -17,7 +17,7 @@ public class BoardFileServiceImpl implements BoardFileService {
     private String uploadDir;
 
     @Override
-    public String saveFile(HttpSession session, MultipartFile upfile) throws IOException {
+    public String saveFile(MultipartFile upfile) throws IOException {
         String originName = upfile.getOriginalFilename();
 
         String ext = originName.substring(originName.lastIndexOf("."));
