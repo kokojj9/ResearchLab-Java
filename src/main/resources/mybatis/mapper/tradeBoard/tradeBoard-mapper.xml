@@ -5,7 +5,7 @@
 
 <mapper namespace="com.example.researchlab.board.model.dao.TradeMapper">
 
-    <resultMap id="tradePostResultMap"      type="tradePost">
+    <resultMap id="tradePostResultMap"      type="Post">
         <result property="postNo"           column="POST_NO" />
         <result property="title"            column="TITLE" />
         <result property="content"          column="CONTENT" />
@@ -48,7 +48,7 @@
          WHERE RNUM BETWEEN #{offset} + 1 AND #{offset} + #{pageSize}
     </select>
 
-    <insert id="saveTradePost" parameterType="tradePost" useGeneratedKeys="true"
+    <insert id="saveTradePost" parameterType="Post" useGeneratedKeys="true"
             keyProperty="postNo" keyColumn="POST_NO">
         INSERT
           INTO
@@ -70,7 +70,7 @@
                )
     </insert>
 
-    <insert id="saveImage" parameterType="tradePost">
+    <insert id="saveImage" parameterType="Post">
         <foreach collection="imageList" item="image">
         INSERT
           INTO
@@ -92,5 +92,23 @@
                )
         </foreach>
     </insert>
+
+    <select id="selectPostDetail" parameterType="int" resultMap="tradePostResultMap">
+        SELECT
+               tp.POST_NO,
+               TITLE,
+               CONTENT,
+               MEMBER_ID,
+               tp.CREATE_DATE,
+               tp.UPDATE_DATE,
+               IMAGE_NO,
+               STORED_NAME
+          FROM
+               TB_TRADEPOST tp
+          JOIN
+               TB_IMAGES im ON(im.POST_NO = tp.POST_NO)
+         WHERE
+               tp.POST_NO = ${postNo}
+    </select>
 
 </mapper>

@@ -38,5 +38,9 @@ public class TradeBoardServiceImpl implements TradeBoardService {
         return new PageImpl<>(posts, pageable, total);
     }
 
+    @Override
+    public Post selectPostDetail(int postNo) {
+        return tradeMapper.selectPostDetail(postNo);
+    }
 
 }

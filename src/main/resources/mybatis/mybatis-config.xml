@@ -14,7 +14,7 @@
         <typeAlias type="com.example.researchlab.member.model.vo.Member"          alias="member"/>
         <typeAlias type="com.example.researchlab.investment.model.vo.MyStockList" alias="myStockList"/>
         <typeAlias type="com.example.researchlab.investment.model.vo.StockItem"   alias="stockItem"/>
-        <typeAlias type="com.example.researchlab.board.model.vo.TradePost"        alias="tradePost" />
+        <typeAlias type="com.example.researchlab.board.model.vo.Post"             alias="Post" />
         <typeAlias type="com.example.researchlab.board.model.vo.PostImage"        alias="postImage" />
     </typeAliases>
 
