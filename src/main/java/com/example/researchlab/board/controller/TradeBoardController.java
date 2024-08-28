@@ -32,6 +32,7 @@ public class TradeBoardController {
     // 글 조회
     @GetMapping
     public Page<Post> selectTradePosts(@RequestParam int page, @RequestParam int size) {
+        logger.info("전체 게시글 조회: page={}, size={}", page, size);
         return tradeBoardService.selectTradePosts(page, size);
     }
 

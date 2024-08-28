@@ -104,11 +104,11 @@
                IMAGE_NO,
                STORED_NAME
           FROM
-               TB_TEADEPOST tp
+               TB_TRADEPOST tp
           JOIN
                TB_IMAGES im ON(im.POST_NO = tp.POST_NO)
          WHERE
-               POST_NO = ${postNo}
+               tp.POST_NO = ${postNo}
     </select>
 
 </mapper>
