@@ -8,10 +8,12 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-public interface TradeBoardService {
+public interface StrategylabService {
     Post selectPostDetail(int postNo);
 
     int saveTradePost(Post tradePost);
 
     Page<Post> selectTradePosts(int page, int size);
+
+    boolean deletePost(int postNo, String memberId);
 }

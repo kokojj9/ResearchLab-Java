@@ -1,11 +1,10 @@
 package com.example.researchlab.board.controller;
 
 import com.example.researchlab.board.model.service.BoardFileService;
-import com.example.researchlab.board.model.service.TradeBoardService;
+import com.example.researchlab.board.model.service.StrategylabService;
 import com.example.researchlab.board.model.vo.Post;
 import com.example.researchlab.board.model.vo.PostImage;
 import com.example.researchlab.common.model.vo.ResponseData;
-import com.example.researchlab.member.controller.MemberController;
 import com.example.researchlab.template.ResponseTemplate;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -21,19 +20,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/tradeBoard")
+@RequestMapping("/strategylab")
 @RequiredArgsConstructor
-public class TradeBoardController {
+public class StrategylabController {
 
-    private final TradeBoardService tradeBoardService;
+    private final StrategylabService strategylabService;
     private final ResponseTemplate responseTemplate;
     private final BoardFileService boardFileService;
-    private static final Logger logger = LoggerFactory.getLogger(TradeBoardController.class);
+    private static final Logger logger = LoggerFactory.getLogger(StrategylabController.class);
     // 글 조회
     @GetMapping
     public Page<Post> selectTradePosts(@RequestParam int page, @RequestParam int size) {
         logger.info("전체 게시글 조회: page={}, size={}", page, size);
-        return tradeBoardService.selectTradePosts(page, size);
+        return strategylabService.selectTradePosts(page, size);
     }
 
     // 글 쓰기
@@ -48,7 +47,7 @@ public class TradeBoardController {
             if (images != null) {
                 post.setImageList(setImages(images));
             }
-            int result = tradeBoardService.saveTradePost(post);
+            int result = strategylabService.saveTradePost(post);
 
             rd = result > 0 ? responseTemplate.success("작성 성공", null, HttpStatus.OK) :
                     responseTemplate.fail("작성 실패", HttpStatus.BAD_REQUEST);
@@ -72,9 +71,29 @@ public class TradeBoardController {
     @GetMapping("/{postNo}")
     public Post selectPostDetail(@PathVariable int postNo){
         logger.info("게시글 조회 시도: {}", postNo);
-        return tradeBoardService.selectPostDetail(postNo);
+        return strategylabService.selectPostDetail(postNo);
     }
     // 글 수정
-    // 글 삭제
+
+    // 글삭제
+    @DeleteMapping("/{postNo}")
+    public ResponseData<Object> deletePost(@PathVariable int postNo, @RequestParam String memberId){
+        logger.info("글 삭제 시도: {}", postNo + "/" + memberId);
+        ResponseData.ResponseDataBuilder<Object> responseDataBuilder =  ResponseData.builder();
+
+        boolean result = strategylabService.deletePost(postNo, memberId);
+
+        if(result) {
+            responseDataBuilder.responseCode("YY")
+                               .resultMessage("삭제 성공")
+                               .data(null);
+        } else {
+            responseDataBuilder.responseCode("NN")
+                               .resultMessage("삭제 실패")
+                               .data(null);
+        }
+
+        return responseDataBuilder.build();
+    }
 
 }

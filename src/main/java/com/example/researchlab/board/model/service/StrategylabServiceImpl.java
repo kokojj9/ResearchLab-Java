@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class TradeBoardServiceImpl implements TradeBoardService {
+public class StrategylabServiceImpl implements StrategylabService {
 
     private final TradeMapper tradeMapper;
 
@@ -43,4 +43,9 @@ public class TradeBoardServiceImpl implements TradeBoardService {
         return tradeMapper.selectPostDetail(postNo);
     }
 
+    @Override
+    public boolean deletePost(int postNo, String memberId) {
+
+        return tradeMapper.deletePost(postNo, memberId);
+    }
 }
