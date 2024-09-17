@@ -84,6 +84,7 @@ public class StrategylabController {
         boolean result = strategylabService.deletePost(postNo, memberId);
 
         if(result) {
+            logger.info("글 삭제 성공: {}", postNo);
             responseDataBuilder.responseCode("YY")
                                .resultMessage("삭제 성공")
                                .data(null);
