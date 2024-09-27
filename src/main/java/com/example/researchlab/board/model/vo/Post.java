@@ -19,4 +19,5 @@ public class Post {
     private Date createDate;
     private Date updateDate;
     private List<PostImage> imageList;
+    private int viewCount;
 }
