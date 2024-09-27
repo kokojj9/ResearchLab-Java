@@ -29,7 +29,7 @@ public class StrategylabController {
     private final BoardFileService boardFileService;
     private static final Logger logger = LoggerFactory.getLogger(StrategylabController.class);
     // 글 조회
-    @GetMapping
+    @GetMapping("/posts")
     public Page<Post> selectTradePosts(@RequestParam int page, @RequestParam int size) {
         logger.info("전체 게시글 조회: page={}, size={}", page, size);
         return strategylabService.selectTradePosts(page, size);
@@ -68,7 +68,7 @@ public class StrategylabController {
     }
 
     // 상세 조회
-    @GetMapping("/{postNo}")
+    @GetMapping("/posts/{postNo}")
     public Post selectPostDetail(@PathVariable int postNo){
         logger.info("게시글 조회 시도: {}", postNo);
         return strategylabService.selectPostDetail(postNo);
@@ -76,7 +76,7 @@ public class StrategylabController {
     // 글 수정
 
     // 글삭제
-    @DeleteMapping("/{postNo}")
+    @DeleteMapping("/posts/{postNo}")
     public ResponseData<Object> deletePost(@PathVariable int postNo, @RequestParam String memberId){
         logger.info("글 삭제 시도: {}", postNo + "/" + memberId);
         ResponseData.ResponseDataBuilder<Object> responseDataBuilder =  ResponseData.builder();
@@ -97,4 +97,10 @@ public class StrategylabController {
         return responseDataBuilder.build();
     }
 
+    @GetMapping("/members/{memberId}/posts")
+    public List<Post> selectMyPosts(@PathVariable String memberId) {
+        logger.info("내 글 조회 시도: {}", memberId);
+
+        return null;
+    }
 }
