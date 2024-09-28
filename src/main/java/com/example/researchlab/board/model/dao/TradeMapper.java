@@ -12,11 +12,12 @@ public interface TradeMapper {
 
     int saveImage(Post tradePost);
 
-    List<Post> findAllPosts(@Param("pageSize") int pageSize, @Param("offset") int offset);
+    List<Post> findPosts(@Param("pageSize") int pageSize, @Param("offset") int offset, @Param("memberId") String memberId);
 
     int countAllPosts();
 
     Post selectPostDetail(int postNo);
 
     boolean deletePost(int postNo, String memberId);
+
 }

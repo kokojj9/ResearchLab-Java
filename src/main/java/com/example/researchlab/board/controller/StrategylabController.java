@@ -35,37 +35,23 @@ public class StrategylabController {
         return strategylabService.selectTradePosts(page, size);
     }
 
+    @GetMapping("/members/{memberId}/posts")
+    public Page<Post> selectMyPosts(@RequestParam int page, @RequestParam int size, @PathVariable String memberId) {
+        logger.info("내 게시글 조회: {}", memberId);
+        return strategylabService.selectMyPosts(page, size, memberId);
+    }
+
     // 글 쓰기
     @PostMapping("/posts")
     public ResponseEntity<ResponseData<Object>> saveTradePost(@RequestPart("tradePost") Post post,
                                                               @RequestPart(value = "images", required = false) List<MultipartFile> images) throws IOException {
 
-        ResponseEntity<ResponseData<Object>> rd;
-
         if (post.getTitle().isEmpty()) {
-            rd = responseTemplate.fail("작성 실패", HttpStatus.BAD_REQUEST);
-        } else {
-            if (images != null) {
-                post.setImageList(setImages(images));
-            }
-            int result = strategylabService.saveTradePost(post);
-
-            rd = result > 0 ? responseTemplate.success("작성 성공", null, HttpStatus.OK) :
-                    responseTemplate.fail("작성 실패", HttpStatus.BAD_REQUEST);
+           return responseTemplate.fail("작성 실패", HttpStatus.BAD_REQUEST);
         }
-        return rd;
-    }
 
-    private List<PostImage> setImages(List<MultipartFile> images) throws IOException {
-        List<PostImage> imageList = new ArrayList<>();
-        for (MultipartFile image : images) {
-            String storedFileName = boardFileService.saveFile(image);
-            PostImage postImage = new PostImage();
-            postImage.setOriginalName(image.getOriginalFilename());
-            postImage.setStoredName(storedFileName);
-            imageList.add(postImage);
-        }
-        return imageList;
+        strategylabService.saveTradePost(post, images);
+        return responseTemplate.success("작성 성공", null, HttpStatus.OK);
     }
 
     // 상세 조회
@@ -81,7 +67,6 @@ public class StrategylabController {
     public ResponseData<Object> deletePost(@PathVariable int postNo, @RequestParam String memberId){
         logger.info("글 삭제 시도: {}", postNo + "/" + memberId);
         ResponseData.ResponseDataBuilder<Object> responseDataBuilder =  ResponseData.builder();
-
         boolean result = strategylabService.deletePost(postNo, memberId);
 
         if(result) {
@@ -98,9 +83,5 @@ public class StrategylabController {
         return responseDataBuilder.build();
     }
 
-    @GetMapping("/members/{memberId}/posts")
-    public List<Post> selectMyPosts(@PathVariable String memberId) {
-        logger.info("내 글 조회 시도: {}", memberId);
-        return strategylabService.selectMyPosts(memberId);
-    }
+
 }
