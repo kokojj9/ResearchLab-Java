@@ -16,4 +16,6 @@ public interface StrategylabService {
     Page<Post> selectTradePosts(int page, int size);
 
     boolean deletePost(int postNo, String memberId);
+
+    List<Post> selectMyPosts(String memberId);
 }

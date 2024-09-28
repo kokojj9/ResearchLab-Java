@@ -45,7 +45,11 @@ public class StrategylabServiceImpl implements StrategylabService {
 
     @Override
     public boolean deletePost(int postNo, String memberId) {
-
         return tradeMapper.deletePost(postNo, memberId);
+    }
+
+    @Override
+    public List<Post> selectMyPosts(String memberId) {
+        return null;
     }
 }

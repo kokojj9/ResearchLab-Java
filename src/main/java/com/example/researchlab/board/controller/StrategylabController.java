@@ -39,6 +39,7 @@ public class StrategylabController {
     @PostMapping("/posts")
     public ResponseEntity<ResponseData<Object>> saveTradePost(@RequestPart("tradePost") Post post,
                                                               @RequestPart(value = "images", required = false) List<MultipartFile> images) throws IOException {
+
         ResponseEntity<ResponseData<Object>> rd;
 
         if (post.getTitle().isEmpty()) {
@@ -100,7 +101,6 @@ public class StrategylabController {
     @GetMapping("/members/{memberId}/posts")
     public List<Post> selectMyPosts(@PathVariable String memberId) {
         logger.info("내 글 조회 시도: {}", memberId);
-
-        return null;
+        return strategylabService.selectMyPosts(memberId);
     }
 }
