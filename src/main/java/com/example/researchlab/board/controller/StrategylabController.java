@@ -43,8 +43,10 @@ public class StrategylabController {
 
     // 글 쓰기
     @PostMapping("/posts")
-    public ResponseEntity<ResponseData<Object>> saveTradePost(@RequestPart("tradePost") Post post,
+    public ResponseEntity<ResponseData<Object>> saveTradePost(@RequestPart("post") Post post,
                                                               @RequestPart(value = "images", required = false) List<MultipartFile> images) throws IOException {
+
+        logger.info("글 작성 시도: {}", post.getTitle());
 
         if (post.getTitle().isEmpty()) {
            return responseTemplate.fail("작성 실패", HttpStatus.BAD_REQUEST);
@@ -64,23 +66,16 @@ public class StrategylabController {
 
     // 글삭제
     @DeleteMapping("/posts/{postNo}")
-    public ResponseData<Object> deletePost(@PathVariable int postNo, @RequestParam String memberId){
-        logger.info("글 삭제 시도: {}", postNo + "/" + memberId);
-        ResponseData.ResponseDataBuilder<Object> responseDataBuilder =  ResponseData.builder();
+    public ResponseEntity<ResponseData<Object>> deletePost(@PathVariable int postNo, @RequestParam String memberId){
+        logger.info("글 삭제 시도: {}, {}", postNo , memberId);
         boolean result = strategylabService.deletePost(postNo, memberId);
 
         if(result) {
             logger.info("글 삭제 성공: {}", postNo);
-            responseDataBuilder.responseCode("YY")
-                               .resultMessage("삭제 성공")
-                               .data(null);
+            return responseTemplate.success("삭제 성공", null, HttpStatus.OK);
         } else {
-            responseDataBuilder.responseCode("NN")
-                               .resultMessage("삭제 실패")
-                               .data(null);
+            return responseTemplate.fail("삭제 실패", HttpStatus.BAD_REQUEST);
         }
-
-        return responseDataBuilder.build();
     }
 
 

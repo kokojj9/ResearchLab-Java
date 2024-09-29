@@ -25,10 +25,9 @@ public class BoardFileServiceImpl implements BoardFileService {
         int random = (int) (Math.random() * 90000) + 10000;
         String changeName = currentTime + "_" + random + ext;
 
-        String savePath = uploadDir;
-        File folder = new File(savePath);
+        File folder = new File(uploadDir);
 
-        File file = new File(savePath, changeName);
+        File file = new File(uploadDir, changeName);
         upfile.transferTo(file);
 
         return "upfiles/boardImages/" + changeName;
