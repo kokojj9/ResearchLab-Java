@@ -47,7 +47,6 @@ public class StrategylabServiceImpl implements StrategylabService {
     }
 
     @Override
-    @Transactional
     public int saveTradePost(Post post, List<MultipartFile> images) throws IOException {
         int result = tradeMapper.saveTradePost(post);
 
@@ -76,7 +75,7 @@ public class StrategylabServiceImpl implements StrategylabService {
                 throw e; // 예외를 던져 트랜잭션 롤백 처리
             }
         }
-
+        logger.info("이미지 저장 성공: {}", images.get(0).getOriginalFilename());
         return imageList;
     }
 

@@ -44,14 +44,20 @@
     </select>
 
     <select id="findPosts" parameterType="map" resultMap="tradePostResultMap">
+        SELECT
+               *
+          FROM
+               (
         <include refid="postBaseSelect" />
+               )
         <where>
+            RNUM BETWEEN #{offset} + 1 AND #{offset} + #{pageSize}
             <if test="memberId != null">
-                MEMBER_ID = #{ memberId }
+                AND
+                    MEMBER_ID = #{ memberId }
             </if>
         </where>
-        AND
-            RNUM BETWEEN #{offset} + 1 AND #{offset} + #{pageSize}
+
     </select>
 
 <!--    <select id="findAllPosts" parameterType="map" resultMap="tradePostResultMap" >-->
@@ -141,28 +147,6 @@
                tp.POST_NO = ${postNo}
     </select>
 
-    <select id="selectMyPost" parameterType="string" resultMap="tradePostResultMap">
-        SELECT
-               *
-          FROM (
-                 SELECT
-                        tp.POST_NO,
-                        TITLE,
-                        CONTENT,
-                        MEMBER_ID,
-                        tp.CREATE_DATE,
-                        UPDATE_DATE,
-                        IMAGE_NO,
-                        STORED_NAME,
-                        ROW_NUMBER() OVER (ORDER BY tp.CREATE_DATE DESC) AS RNUM
-                   FROM
-                        TB_TRADEPOST tp
-                   LEFT
-                   JOIN
-                        TB_IMAGES ti ON(tp.POST_NO = ti.POST_NO)
-               )
-         WHERE
-               RNUM BETWEEN #{offset} + 1 AND #{offset} + #{pageSize}
-    </select>
+
 
 </mapper>
