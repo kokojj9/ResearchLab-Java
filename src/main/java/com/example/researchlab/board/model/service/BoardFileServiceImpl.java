@@ -34,7 +34,10 @@ public class BoardFileServiceImpl implements BoardFileService {
 
     @Override
     public void deleteFile(String fileName) throws IOException {
-        File file = new File(fileName);
+        String root = System.getProperty("user.dir");
+        String filePath = root +  "/src/main/resources/static/" + fileName;
+        File file = new File(filePath);
+
         if (file.exists()) {
             if (!file.delete()) {
                 throw new IOException("파일 삭제 실패");
@@ -42,7 +45,6 @@ public class BoardFileServiceImpl implements BoardFileService {
         } else {
             throw new IOException("파일이 존재하지 않습니다.");
         }
-
     }
 
 
