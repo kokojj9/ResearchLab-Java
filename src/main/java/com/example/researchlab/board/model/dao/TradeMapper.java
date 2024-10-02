@@ -18,6 +18,7 @@ public interface TradeMapper {
 
     Post selectPostDetail(int postNo);
 
-    boolean deletePost(int postNo, String memberId);
+    void deletePost(int postNo, String memberId);
 
+    void deleteImage(int postNo);
 }
