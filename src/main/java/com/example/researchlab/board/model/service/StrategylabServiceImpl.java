@@ -46,6 +46,7 @@ public class StrategylabServiceImpl implements StrategylabService {
         return new PageImpl<>(posts, pageable, total);
     }
 
+    @Transactional
     @Override
     public int saveTradePost(Post post, List<MultipartFile> images) throws IOException {
         int result = tradeMapper.saveTradePost(post);
@@ -75,7 +76,7 @@ public class StrategylabServiceImpl implements StrategylabService {
                 throw e; // 예외를 던져 트랜잭션 롤백 처리
             }
         }
-        logger.info("이미지 저장 성공: {}", images.get(0).getOriginalFilename());
+
         return imageList;
     }
 
@@ -84,9 +85,31 @@ public class StrategylabServiceImpl implements StrategylabService {
         return tradeMapper.selectPostDetail(postNo);
     }
 
+    @Transactional
     @Override
-    public boolean deletePost(int postNo, String memberId) {
-        return tradeMapper.deletePost(postNo, memberId);
+    public int deletePost(int postNo, String memberId) throws IOException {
+        Post post = tradeMapper.selectPostDetail(postNo);
+
+        if (post == null){
+           return 0;
+        }
+
+        tradeMapper.deletePost(postNo, memberId);
+        tradeMapper.deleteImage(postNo);
+        deleteFiles(post.getImageList());
+
+        return 1;
+    }
+
+    private void deleteFiles(List<PostImage> imageList) throws IOException {
+        for(PostImage file: imageList){
+            String fileName = file.getStoredName();
+            try {
+                boardFileService.deleteFile(fileName);
+            } catch (IOException e) {
+                logger.error("파일 삭제 실패: {}", fileName);
+            }
+        }
     }
 
 

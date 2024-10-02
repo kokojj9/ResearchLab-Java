@@ -28,13 +28,14 @@ public class StrategylabController {
     private final ResponseTemplate responseTemplate;
     private final BoardFileService boardFileService;
     private static final Logger logger = LoggerFactory.getLogger(StrategylabController.class);
-    // 글 조회
+    // 전체 글 조회
     @GetMapping("/posts")
     public Page<Post> selectTradePosts(@RequestParam int page, @RequestParam int size) {
         logger.info("전체 게시글 조회: page={}, size={}", page, size);
         return strategylabService.selectTradePosts(page, size);
     }
 
+    //내 게시글 조회
     @GetMapping("/members/{memberId}/posts")
     public Page<Post> selectMyPosts(@RequestParam int page, @RequestParam int size, @PathVariable String memberId) {
         logger.info("내 게시글 조회: {}", memberId);
@@ -46,13 +47,12 @@ public class StrategylabController {
     public ResponseEntity<ResponseData<Object>> saveTradePost(@RequestPart("post") Post post,
                                                               @RequestPart(value = "images", required = false) List<MultipartFile> images) throws IOException {
 
-        logger.info("글 작성 시도: {}", post.getTitle());
-
         if (post.getTitle().isEmpty()) {
            return responseTemplate.fail("작성 실패", HttpStatus.BAD_REQUEST);
         }
 
         strategylabService.saveTradePost(post, images);
+        logger.info("글 작성: {}", post.getTitle());
         return responseTemplate.success("작성 성공", null, HttpStatus.OK);
     }
 
@@ -66,11 +66,11 @@ public class StrategylabController {
 
     // 글삭제
     @DeleteMapping("/posts/{postNo}")
-    public ResponseEntity<ResponseData<Object>> deletePost(@PathVariable int postNo, @RequestParam String memberId){
+    public ResponseEntity<ResponseData<Object>> deletePost(@PathVariable int postNo, @RequestParam String memberId) throws IOException {
         logger.info("글 삭제 시도: {}, {}", postNo , memberId);
-        boolean result = strategylabService.deletePost(postNo, memberId);
+        int result = strategylabService.deletePost(postNo, memberId);
 
-        if(result) {
+        if(result > 0) {
             logger.info("글 삭제 성공: {}", postNo);
             return responseTemplate.success("삭제 성공", null, HttpStatus.OK);
         } else {

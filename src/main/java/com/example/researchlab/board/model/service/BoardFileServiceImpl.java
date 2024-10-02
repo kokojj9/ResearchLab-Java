@@ -1,6 +1,5 @@
 package com.example.researchlab.board.model.service;
 
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +30,19 @@ public class BoardFileServiceImpl implements BoardFileService {
         upfile.transferTo(file);
 
         return "upfiles/boardImages/" + changeName;
+    }
+
+    @Override
+    public void deleteFile(String fileName) throws IOException {
+        File file = new File(fileName);
+        if (file.exists()) {
+            if (!file.delete()) {
+                throw new IOException("파일 삭제 실패");
+            }
+        } else {
+            throw new IOException("파일이 존재하지 않습니다.");
+        }
+
     }
 
 

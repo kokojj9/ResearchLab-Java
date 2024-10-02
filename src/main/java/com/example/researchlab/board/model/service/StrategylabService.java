@@ -17,7 +17,7 @@ public interface StrategylabService {
 
     Page<Post> selectTradePosts(int page, int size);
 
-    boolean deletePost(int postNo, String memberId);
+    int deletePost(int postNo, String memberId) throws IOException;
 
     Page<Post> selectMyPosts(int page, int size, String memberId);
 }

@@ -37,6 +37,9 @@
           LEFT
           JOIN
                TB_IMAGES ti ON(tp.POST_NO = ti.POST_NO)
+         ORDER
+            BY
+               tp.POST_NO DESC
     </sql>
 
     <select id="countAllPosts" resultType="int">
@@ -48,10 +51,11 @@
                *
           FROM
                (
-        <include refid="postBaseSelect" />
+                <include refid="postBaseSelect" />
                )
         <where>
             RNUM BETWEEN #{offset} + 1 AND #{offset} + #{pageSize}
+            AND IS_DELETED = 'N'
             <if test="memberId != null">
                 AND
                     MEMBER_ID = #{ memberId }
@@ -147,6 +151,24 @@
                tp.POST_NO = ${postNo}
     </select>
 
+    <update id="deletePost" parameterType="map">
+        UPDATE
+               TB_POST
+           SET
+               IS_DELETED = 'Y'
+         WHERE
+               POST_NO = #{ postNo }
+           AND
+               MEMBER_ID = #{ memberId }
+    </update>
 
+    <update id="deleteImage" parameterType="map">
+        UPDATE
+               TB_IMAGES
+           SET
+               IS_DELETED = 'Y'
+         WHERE
+                POST_NO = #{ postNo }
+    </update>
 
 </mapper>
