@@ -4,15 +4,17 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @AllArgsConstructor @NoArgsConstructor @Getter @Setter @ToString
 public class Member {
 
-    String memberNo;
+    private int memberNo;
     @NotBlank
-    String memberId;
+    private String memberId;
     @NotBlank
-    String memberPwd;
-    String email;
-    String enrollDate;
-    String status;
+    private String memberPwd;
+    private LocalDateTime enrollDate;
+    private String email;
+    private String status;
 }

@@ -9,4 +9,5 @@ public interface BoardFileService {
     String saveFile(MultipartFile image) throws IOException;
 
     void deleteFile(String fileName) throws IOException;
+
 }

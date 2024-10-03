@@ -22,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StrategylabController {
 
+
     private static final Logger logger = LoggerFactory.getLogger(StrategylabController.class);
     private final StrategylabService strategylabService;
     private final ResponseTemplate responseTemplate;
@@ -88,6 +89,7 @@ public class StrategylabController {
             return responseTemplate.fail("삭제 실패", HttpStatus.BAD_REQUEST);
         }
     }
+
 
 
 }
