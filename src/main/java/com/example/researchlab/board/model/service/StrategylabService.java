@@ -20,4 +20,6 @@ public interface StrategylabService {
     int deletePost(int postNo, String memberId) throws IOException;
 
     Page<Post> selectMyPosts(int page, int size, String memberId);
+
+    int updatePost(int postNo, Post post, List<MultipartFile> images) throws IOException;
 }

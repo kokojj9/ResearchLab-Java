@@ -31,12 +31,17 @@
                UPDATE_DATE,
                IMAGE_NO,
                STORED_NAME,
-               ROW_NUMBER() OVER (ORDER BY tp.CREATE_DATE DESC) AS RNUM
+               ROW_NUMBER() OVER (ORDER BY tp.CREATE_DATE DESC) AS RNUM,
+               tp.IS_DELETED
           FROM
                TB_TRADEPOST tp
           LEFT
           JOIN
                TB_IMAGES ti ON(tp.POST_NO = ti.POST_NO)
+           AND
+               ti.IS_DELETED = 'N'
+         WHERE
+               tp.IS_DELETED = 'N'
          ORDER
             BY
                tp.POST_NO DESC
@@ -55,7 +60,6 @@
                )
         <where>
             RNUM BETWEEN #{offset} + 1 AND #{offset} + #{pageSize}
-            AND IS_DELETED = 'N'
             <if test="memberId != null">
                 AND
                     MEMBER_ID = #{ memberId }
@@ -63,30 +67,6 @@
         </where>
 
     </select>
-
-<!--    <select id="findAllPosts" parameterType="map" resultMap="tradePostResultMap" >-->
-<!--        SELECT-->
-<!--               *-->
-<!--          FROM (-->
-<!--               SELECT-->
-<!--                      tp.POST_NO,-->
-<!--                      TITLE,-->
-<!--                      CONTENT,-->
-<!--                      MEMBER_ID,-->
-<!--                      tp.CREATE_DATE,-->
-<!--                      UPDATE_DATE,-->
-<!--                      IMAGE_NO,-->
-<!--                      STORED_NAME,-->
-<!--                      ROW_NUMBER() OVER (ORDER BY tp.CREATE_DATE DESC) AS RNUM-->
-<!--                 FROM-->
-<!--                      TB_TRADEPOST tp-->
-<!--                 LEFT-->
-<!--                 JOIN-->
-<!--                      TB_IMAGES ti ON(tp.POST_NO = ti.POST_NO)-->
-<!--               )-->
-<!--         WHERE-->
-<!--               RNUM BETWEEN #{offset} + 1 AND #{offset} + #{pageSize}-->
-<!--    </select>-->
 
     <insert id="saveTradePost" parameterType="Post" useGeneratedKeys="true"
             keyProperty="postNo" keyColumn="POST_NO">
@@ -145,15 +125,18 @@
                STORED_NAME
           FROM
                TB_TRADEPOST tp
+          LEFT
           JOIN
-               TB_IMAGES im ON(im.POST_NO = tp.POST_NO)
+               TB_IMAGES ti ON(ti.POST_NO = tp.POST_NO)
          WHERE
                tp.POST_NO = ${postNo}
+           AND
+               ti.IS_DELETED = 'N'
     </select>
 
     <update id="deletePost" parameterType="map">
         UPDATE
-               TB_POST
+               TB_TRADEPOST
            SET
                IS_DELETED = 'Y'
          WHERE
@@ -168,7 +151,18 @@
            SET
                IS_DELETED = 'Y'
          WHERE
-                POST_NO = #{ postNo }
+               POST_NO = #{ postNo }
+    </update>
+
+    <update id="updatePost" parameterType="map">
+        UPDATE
+               TB_TRADEPOST
+           SET
+               TITLE = #{ title },
+               CONTENT = #{ content },
+               UPDATE_DATE = SYSDATE
+         WHERE
+               POST_NO = #{ postNo }
     </update>
 
 </mapper>
