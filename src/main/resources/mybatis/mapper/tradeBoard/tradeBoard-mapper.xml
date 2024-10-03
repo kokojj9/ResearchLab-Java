@@ -38,10 +38,10 @@
           LEFT
           JOIN
                TB_IMAGES ti ON(tp.POST_NO = ti.POST_NO)
-         WHERE
-               tp.IS_DELETED = 'N'
            AND
                ti.IS_DELETED = 'N'
+         WHERE
+               tp.IS_DELETED = 'N'
          ORDER
             BY
                tp.POST_NO DESC
@@ -125,10 +125,13 @@
                STORED_NAME
           FROM
                TB_TRADEPOST tp
+          LEFT
           JOIN
-               TB_IMAGES im ON(im.POST_NO = tp.POST_NO)
+               TB_IMAGES ti ON(ti.POST_NO = tp.POST_NO)
          WHERE
                tp.POST_NO = ${postNo}
+           AND
+               ti.IS_DELETED = 'N'
     </select>
 
     <update id="deletePost" parameterType="map">

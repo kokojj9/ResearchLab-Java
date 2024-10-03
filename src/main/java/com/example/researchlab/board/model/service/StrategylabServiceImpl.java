@@ -22,9 +22,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StrategylabServiceImpl implements StrategylabService {
 
+    private static final Logger logger = LoggerFactory.getLogger(StrategylabController.class);
     private final TradeMapper tradeMapper;
     private final BoardFileService boardFileService;
-    private static final Logger logger = LoggerFactory.getLogger(StrategylabController.class);
 
     @Override
     public Page<Post> selectTradePosts(int page, int size) {
@@ -41,13 +41,13 @@ public class StrategylabServiceImpl implements StrategylabService {
     public int updatePost(int postNo, Post post, List<MultipartFile> imageList) throws IOException {
         int result = tradeMapper.updatePost(post);
 
-        if(result > 0 && !post.getImageList().isEmpty()){
+        if (result > 0 && imageList != null) {
             List<PostImage> images = setImages(imageList);
             post.setImageList(images);
 
-            result = tradeMapper.saveImage(post);
             tradeMapper.deleteImage(postNo);
-            deleteFiles(images);
+//            deleteFiles(images);
+            result = tradeMapper.saveImage(post);
         }
 
         return result;
@@ -68,7 +68,7 @@ public class StrategylabServiceImpl implements StrategylabService {
     public int saveTradePost(Post post, List<MultipartFile> imageList) throws IOException {
         int result = tradeMapper.saveTradePost(post);
 
-        if (result > 0 && !post.getImageList().isEmpty()) {
+        if (result > 0 && imageList != null) {
             List<PostImage> images = setImages(imageList);
             post.setImageList(images);
 
@@ -107,9 +107,7 @@ public class StrategylabServiceImpl implements StrategylabService {
     public int deletePost(int postNo, String memberId) throws IOException {
         Post post = tradeMapper.selectPostDetail(postNo);
 
-        if (post == null){
-           return 0;
-        }
+        if (post == null) return 0;
 
         tradeMapper.deletePost(postNo, memberId);
         tradeMapper.deleteImage(postNo);
@@ -119,7 +117,7 @@ public class StrategylabServiceImpl implements StrategylabService {
     }
 
     private void deleteFiles(List<PostImage> imageList) throws IOException {
-        for(PostImage file: imageList){
+        for (PostImage file : imageList) {
             String fileName = file.getStoredName();
             try {
                 boardFileService.deleteFile(fileName);

@@ -67,8 +67,6 @@ public class StrategylabController {
     public ResponseEntity<ResponseData<Object>> updatePost(@PathVariable int postNo,
                                                            @RequestPart("post") Post post,
                                                            @RequestPart(value = "imageList", required = false) List<MultipartFile> imageList) throws IOException {
-
-        logger.info("첨부파일: {}", imageList);
         logger.info("게시글 수정 시도: {}", postNo);
         if (post.getTitle().isEmpty()) {
             return responseTemplate.fail("수정 실패", HttpStatus.BAD_REQUEST);
