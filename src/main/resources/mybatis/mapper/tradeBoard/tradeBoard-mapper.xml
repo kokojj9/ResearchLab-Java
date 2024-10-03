@@ -40,6 +40,8 @@
                TB_IMAGES ti ON(tp.POST_NO = ti.POST_NO)
          WHERE
                tp.IS_DELETED = 'N'
+           AND
+               ti.IS_DELETED = 'N'
          ORDER
             BY
                tp.POST_NO DESC
@@ -146,7 +148,18 @@
            SET
                IS_DELETED = 'Y'
          WHERE
-                POST_NO = #{ postNo }
+               POST_NO = #{ postNo }
+    </update>
+
+    <update id="updatePost" parameterType="map">
+        UPDATE
+               TB_TRADEPOST
+           SET
+               TITLE = #{ title },
+               CONTENT = #{ content },
+               UPDATE_DATE = SYSDATE
+         WHERE
+               POST_NO = #{ postNo }
     </update>
 
 </mapper>

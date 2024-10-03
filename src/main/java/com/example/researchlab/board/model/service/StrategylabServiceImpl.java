@@ -36,6 +36,23 @@ public class StrategylabServiceImpl implements StrategylabService {
         return getPosts(page, size, memberId);
     }
 
+    @Transactional
+    @Override
+    public int updatePost(int postNo, Post post, List<MultipartFile> images) throws IOException {
+        int result = tradeMapper.updatePost(post);
+
+        if(result > 0 && !post.getImageList().isEmpty()){
+            List<PostImage> imageList = setImages(images);
+            post.setImageList(imageList);
+
+            result = tradeMapper.saveImage(post);
+            tradeMapper.deleteImage(postNo);
+            deleteFiles(imageList);
+        }
+
+        return result;
+    }
+
     private PageImpl<Post> getPosts(int page, int size, String memberId) {
         int offset = page * size;
 
