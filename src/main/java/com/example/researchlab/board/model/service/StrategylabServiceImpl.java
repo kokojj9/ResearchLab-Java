@@ -38,16 +38,16 @@ public class StrategylabServiceImpl implements StrategylabService {
 
     @Transactional
     @Override
-    public int updatePost(int postNo, Post post, List<MultipartFile> images) throws IOException {
+    public int updatePost(int postNo, Post post, List<MultipartFile> imageList) throws IOException {
         int result = tradeMapper.updatePost(post);
 
         if(result > 0 && !post.getImageList().isEmpty()){
-            List<PostImage> imageList = setImages(images);
-            post.setImageList(imageList);
+            List<PostImage> images = setImages(imageList);
+            post.setImageList(images);
 
             result = tradeMapper.saveImage(post);
             tradeMapper.deleteImage(postNo);
-            deleteFiles(imageList);
+            deleteFiles(images);
         }
 
         return result;
@@ -65,12 +65,12 @@ public class StrategylabServiceImpl implements StrategylabService {
 
     @Transactional
     @Override
-    public int saveTradePost(Post post, List<MultipartFile> images) throws IOException {
+    public int saveTradePost(Post post, List<MultipartFile> imageList) throws IOException {
         int result = tradeMapper.saveTradePost(post);
 
         if (result > 0 && !post.getImageList().isEmpty()) {
-            List<PostImage> imageList = setImages(images);
-            post.setImageList(imageList);
+            List<PostImage> images = setImages(imageList);
+            post.setImageList(images);
 
             result = tradeMapper.saveImage(post);
         }

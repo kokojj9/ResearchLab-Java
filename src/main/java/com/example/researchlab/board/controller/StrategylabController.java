@@ -44,13 +44,13 @@ public class StrategylabController {
     // 글 쓰기
     @PostMapping("/posts")
     public ResponseEntity<ResponseData<Object>> saveTradePost(@RequestPart("post") Post post,
-                                                              @RequestPart(value = "images", required = false) List<MultipartFile> images) throws IOException {
+                                                              @RequestPart(value = "imageList", required = false) List<MultipartFile> imageList) throws IOException {
 
         if (post.getTitle().isEmpty()) {
             return responseTemplate.fail("작성 실패", HttpStatus.BAD_REQUEST);
         }
 
-        strategylabService.saveTradePost(post, images);
+        strategylabService.saveTradePost(post, imageList);
         logger.info("글 작성: {}", post.getTitle());
         return responseTemplate.success("작성 성공", null, HttpStatus.OK);
     }
@@ -66,13 +66,14 @@ public class StrategylabController {
     @PutMapping("/posts/{postNo}")
     public ResponseEntity<ResponseData<Object>> updatePost(@PathVariable int postNo,
                                                            @RequestPart("post") Post post,
-                                                           @RequestPart(value = "images", required = false) List<MultipartFile> images) throws IOException {
+                                                           @RequestPart(value = "imageList", required = false) List<MultipartFile> imageList) throws IOException {
 
+        logger.info("첨부파일: {}", imageList);
         logger.info("게시글 수정 시도: {}", postNo);
         if (post.getTitle().isEmpty()) {
-            return responseTemplate.fail("작성 실��", HttpStatus.BAD_REQUEST);
+            return responseTemplate.fail("수정 실패", HttpStatus.BAD_REQUEST);
         }
-        strategylabService.updatePost(postNo, post, images);
+        strategylabService.updatePost(postNo, post, imageList);
         return responseTemplate.success("게시글 수정 성공", null, HttpStatus.OK);
     }
 
