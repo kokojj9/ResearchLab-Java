@@ -27,21 +27,24 @@ public class StrategylabController {
     private final ResponseTemplate responseTemplate;
     private final BoardFileService boardFileService;
 
-    // 전체 글 조회
     @GetMapping("/posts")
     public Page<Post> selectTradePosts(@RequestParam int page, @RequestParam int size) {
         logger.info("전체 게시글 조회: page={}, size={}", page, size);
         return strategylabService.selectTradePosts(page, size);
     }
 
-    //내 게시글 조회
     @GetMapping("/members/{memberId}/posts")
     public Page<Post> selectMyPosts(@RequestParam int page, @RequestParam int size, @PathVariable String memberId) {
         logger.info("내 게시글 조회: {}", memberId);
         return strategylabService.selectMyPosts(page, size, memberId);
     }
 
-    // 글 쓰기
+    @GetMapping("/posts/{postNo}")
+    public Post selectPostDetail(@PathVariable int postNo) {
+        logger.info("상세 조회 시도: {}", postNo);
+        return strategylabService.selectPostDetail(postNo);
+    }
+
     @PostMapping("/posts")
     public ResponseEntity<ResponseData<Object>> saveTradePost(@RequestPart("post") Post post,
                                                               @RequestPart(value = "imageList", required = false) List<MultipartFile> imageList) throws IOException {
@@ -55,27 +58,20 @@ public class StrategylabController {
         return responseTemplate.success("작성 성공", null, HttpStatus.OK);
     }
 
-    // 상세 조회
-    @GetMapping("/posts/{postNo}")
-    public Post selectPostDetail(@PathVariable int postNo) {
-        logger.info("게시글 조회 시도: {}", postNo);
-        return strategylabService.selectPostDetail(postNo);
-    }
-
-    // 글 수정
     @PutMapping("/posts/{postNo}")
     public ResponseEntity<ResponseData<Object>> updatePost(@PathVariable int postNo,
                                                            @RequestPart("post") Post post,
                                                            @RequestPart(value = "imageList", required = false) List<MultipartFile> imageList) throws IOException {
-        logger.info("게시글 수정 시도: {}", postNo);
+
         if (post.getTitle().isEmpty()) {
             return responseTemplate.fail("수정 실패", HttpStatus.BAD_REQUEST);
         }
+
         strategylabService.updatePost(postNo, post, imageList);
+        logger.info("게시글 수정: {}", postNo);
         return responseTemplate.success("게시글 수정 성공", null, HttpStatus.OK);
     }
 
-    // 글삭제
     @DeleteMapping("/posts/{postNo}")
     public ResponseEntity<ResponseData<Object>> deletePost(@PathVariable int postNo, @RequestParam String memberId) throws IOException {
         logger.info("글 삭제 시도: {}, {}", postNo, memberId);
