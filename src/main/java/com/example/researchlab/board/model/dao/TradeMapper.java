@@ -23,4 +23,6 @@ public interface TradeMapper {
     void deleteImage(int postNo);
 
     int updatePost(Post post);
+
+    int increaseViewCount(int postNo);
 }
