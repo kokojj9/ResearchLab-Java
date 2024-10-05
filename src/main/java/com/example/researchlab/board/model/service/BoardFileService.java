@@ -11,4 +11,5 @@ public interface BoardFileService {
     String saveFile(MultipartFile image) throws IOException;
 
     void deleteFiles(List<PostImage> imageList) throws IOException;
+
 }
