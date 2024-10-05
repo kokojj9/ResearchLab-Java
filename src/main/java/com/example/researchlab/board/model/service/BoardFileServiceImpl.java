@@ -41,6 +41,7 @@ public class BoardFileServiceImpl implements BoardFileService {
     public void deleteFiles(List<PostImage> imageList) throws IOException {
         for (PostImage file : imageList) {
             String fileName = file.getStoredName();
+
             try {
                 deleteImages(fileName);
             } catch (IOException e) {
