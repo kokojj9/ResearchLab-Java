@@ -19,7 +19,7 @@ public class Post {
     private Date createDate;
     private Date updateDate;
     private List<PostImage> imageList;
-    private int viewCount;
+    private int views;
 
     public Post(int postNo, String title, String content) {
         this.postNo = postNo;

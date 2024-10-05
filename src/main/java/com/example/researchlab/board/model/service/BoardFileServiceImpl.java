@@ -1,6 +1,7 @@
 package com.example.researchlab.board.model.service;
 
 import com.example.researchlab.board.controller.StrategylabController;
+import com.example.researchlab.board.model.vo.PostImage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class BoardFileServiceImpl implements BoardFileService {
@@ -36,7 +38,18 @@ public class BoardFileServiceImpl implements BoardFileService {
     }
 
     @Override
-    public void deleteFile(String fileName) throws IOException {
+    public void deleteFiles(List<PostImage> imageList) throws IOException {
+        for (PostImage file : imageList) {
+            String fileName = file.getStoredName();
+            try {
+                deleteImages(fileName);
+            } catch (IOException e) {
+                logger.error("파일 삭제 실패: {}", fileName);
+            }
+        }
+    }
+
+    private void deleteImages(String fileName) throws IOException {
         String root = System.getProperty("user.dir");
         String filePath = root +  "/src/main/resources/static/" + fileName;
         File file = new File(filePath);
@@ -49,6 +62,5 @@ public class BoardFileServiceImpl implements BoardFileService {
             throw new IOException("파일이 존재하지 않습니다.");
         }
     }
-
 
 }
