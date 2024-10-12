@@ -22,7 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StrategylabServiceImpl implements StrategylabService {
 
-    private static final Logger logger = LoggerFactory.getLogger(StrategylabController.class);
+    private final Logger logger;
     private final BoardFileService boardFileService;
     private final TradeMapper tradeMapper;
 

@@ -6,6 +6,7 @@ import com.example.researchlab.board.model.vo.Post;
 import com.example.researchlab.common.model.vo.ResponseData;
 import com.example.researchlab.template.ResponseTemplate;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -20,10 +21,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/strategylab")
 @RequiredArgsConstructor
+@Slf4j
 public class StrategylabController {
 
-
-    private static final Logger logger = LoggerFactory.getLogger(StrategylabController.class);
+    private final Logger logger;
     private final StrategylabService strategylabService;
     private final ResponseTemplate responseTemplate;
     private final BoardFileService boardFileService;

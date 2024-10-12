@@ -1,9 +1,9 @@
 package com.example.researchlab.board.model.service;
 
-import com.example.researchlab.board.controller.StrategylabController;
 import com.example.researchlab.board.model.vo.PostImage;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,10 +14,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class BoardFileServiceImpl implements BoardFileService {
 
-    private static final Logger logger = LoggerFactory.getLogger(StrategylabController.class);
+    private final Logger logger;
 
     @Value("${file.upload-dir}")
     private String uploadDir;
