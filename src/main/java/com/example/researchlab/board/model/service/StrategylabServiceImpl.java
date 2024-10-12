@@ -6,8 +6,6 @@ import com.example.researchlab.board.model.vo.Post;
 import com.example.researchlab.board.model.vo.PostImage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +20,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StrategylabServiceImpl implements StrategylabService {
 
-    private final Logger logger;
     private final BoardFileService boardFileService;
     private final TradeMapper tradeMapper;
 
@@ -89,7 +86,7 @@ public class StrategylabServiceImpl implements StrategylabService {
                 postImage.setStoredName(storedFileName);
                 imageList.add(postImage);
             } catch (IOException e) {
-                logger.error("이미지 저장 오류: {}", image.getOriginalFilename());
+                log.error("이미지 저장 오류: {}", image.getOriginalFilename());
                 throw e;
             }
         }
