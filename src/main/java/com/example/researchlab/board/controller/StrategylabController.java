@@ -6,8 +6,7 @@ import com.example.researchlab.board.model.vo.Post;
 import com.example.researchlab.common.model.vo.ResponseData;
 import com.example.researchlab.template.ResponseTemplate;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,29 +19,28 @@ import java.util.List;
 @RestController
 @RequestMapping("/strategylab")
 @RequiredArgsConstructor
+@Slf4j
 public class StrategylabController {
 
-
-    private static final Logger logger = LoggerFactory.getLogger(StrategylabController.class);
     private final StrategylabService strategylabService;
     private final ResponseTemplate responseTemplate;
     private final BoardFileService boardFileService;
 
     @GetMapping("/posts")
     public Page<Post> selectTradePosts(@RequestParam int page, @RequestParam int size) {
-        logger.info("전체 게시글 조회: page={}, size={}", page, size);
+        log.info("전체 게시글 조회: page={}, size={}", page, size);
         return strategylabService.selectTradePosts(page, size);
     }
 
     @GetMapping("/members/{memberId}/posts")
     public Page<Post> selectMyPosts(@RequestParam int page, @RequestParam int size, @PathVariable String memberId) {
-        logger.info("내 게시글 조회: {}", memberId);
+        log.info("내 게시글 조회: {}", memberId);
         return strategylabService.selectMyPosts(page, size, memberId);
     }
 
     @GetMapping("/posts/{postNo}")
     public Post selectPostDetail(@PathVariable int postNo) {
-        logger.info("상세 조회 시도: {}", postNo);
+        log.info("상세 조회 시도: {}", postNo);
         return strategylabService.selectPostDetail(postNo);
     }
 
@@ -55,7 +53,7 @@ public class StrategylabController {
         }
 
         strategylabService.saveTradePost(post, imageList);
-        logger.info("글 작성: {}", post.getTitle());
+        log.info("글 작성: {}", post.getTitle());
         return responseTemplate.success("작성 성공", null, HttpStatus.OK);
     }
 
@@ -69,17 +67,17 @@ public class StrategylabController {
         }
 
         strategylabService.updatePost(postNo, post, imageList);
-        logger.info("게시글 수정: {}", postNo);
+        log.info("게시글 수정: {}", postNo);
         return responseTemplate.success("게시글 수정 성공", null, HttpStatus.OK);
     }
 
     @DeleteMapping("/posts/{postNo}")
     public ResponseEntity<ResponseData<Object>> deletePost(@PathVariable int postNo, @RequestParam String memberId) throws IOException {
-        logger.info("글 삭제 시도: {}, {}", postNo, memberId);
+        log.info("글 삭제 시도: {}, {}", postNo, memberId);
         int result = strategylabService.deletePost(postNo, memberId);
 
         if (result > 0) {
-            logger.info("글 삭제 성공: {}", postNo);
+            log.info("글 삭제 성공: {}", postNo);
             return responseTemplate.success("삭제 성공", null, HttpStatus.OK);
         } else {
             return responseTemplate.fail("삭제 실패", HttpStatus.BAD_REQUEST);
