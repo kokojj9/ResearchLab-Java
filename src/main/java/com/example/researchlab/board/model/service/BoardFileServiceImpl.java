@@ -1,9 +1,8 @@
 package com.example.researchlab.board.model.service;
 
-import com.example.researchlab.board.controller.StrategylabController;
 import com.example.researchlab.board.model.vo.PostImage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,10 +13,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class BoardFileServiceImpl implements BoardFileService {
-
-    private static final Logger logger = LoggerFactory.getLogger(StrategylabController.class);
 
     @Value("${file.upload-dir}")
     private String uploadDir;
@@ -41,10 +40,11 @@ public class BoardFileServiceImpl implements BoardFileService {
     public void deleteFiles(List<PostImage> imageList) throws IOException {
         for (PostImage file : imageList) {
             String fileName = file.getStoredName();
+
             try {
                 deleteImages(fileName);
             } catch (IOException e) {
-                logger.error("파일 삭제 실패: {}", fileName);
+                log.error("파일 삭제 실패: {}", fileName);
             }
         }
     }
