@@ -5,10 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -31,7 +28,6 @@ public class StrategylabFileUploadController {
         log.info("quill 이미지 삽입: {}", image.getOriginalFilename());
         try {
             String imageUrl = boardFileService.saveFile(image);
-            log.info("저장된 이미지 경로: {}", imageUrl);
 
             Map<String, String> response = new HashMap<>();
             response.put("imgUrl", imageUrl);
@@ -42,6 +38,14 @@ public class StrategylabFileUploadController {
             return ResponseEntity.status(500).body("이미지 업로드 실패");
         }
     }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteFile(){
+        log.info("게시글 작성 취소");
+
+        return null;
+    }
+
 
 
 }
