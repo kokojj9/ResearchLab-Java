@@ -17,4 +17,7 @@ public class Member {
     private LocalDateTime enrollDate;
     private String email;
     private String status;
+
+    private String token;     // JWT 토큰을 저장할 필드
+    private String message;
 }
