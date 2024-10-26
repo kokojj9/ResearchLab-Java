@@ -17,8 +17,13 @@ public class JwtUtil{
     private final Key key;
 
     // 프로퍼티에서 비밀키를 주입
-    public JwtUtil(@Value("jwt.secret") String secretKey) {
-        this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
+    public JwtUtil(@Value("${jwt.secret}") String secretKey) {
+        // 설정된 시크릿 키가 충분히 긴 경우 사용하고, 아니라면 자동 생성
+        if (secretKey.length() < 32) {
+            this.key = Keys.secretKeyFor(SignatureAlgorithm.HS256);  // 32바이트 이상 자동 생성
+        } else {
+            this.key = Keys.hmacShaKeyFor(secretKey.getBytes());  // 설정된 키 사용
+        }
     }
 
     // JWT 토큰 생성
