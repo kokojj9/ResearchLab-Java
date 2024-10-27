@@ -26,51 +26,38 @@ public class MemberController {
     private final ResponseTemplate responseTemplate;
     private final JwtUtil jwtUtil;
 
-    @PostMapping("/login")
-    public ResponseData<Object> login(@RequestBody @Valid Member member, HttpServletResponse response, BindingResult br) {
-        log.info("회원 로그인 시도: {}", member.getMemberId());
-
-        ResponseData.ResponseDataBuilder<Object> responseDataBuilder = ResponseData.builder();
-
-        if (br.hasErrors()) {
-            log.warn("유효성 검사 오류: {}", br.getAllErrors());
-            return responseDataBuilder.responseCode("NN")
-                                      .resultMessage("잘못된 로그인 정보")
-                                      .data(null)
-                                      .build();
-        }
-
-        Member loginMember = memberService.login(member);
-        if (loginMember == null) {
-            log.warn("존재하지 않는 회원: {}", member.getMemberId());
-            return responseDataBuilder.responseCode("NN")
-                                      .resultMessage("존재하지 않는 회원")
-                                      .data(null)
-                                      .build();
-        }
-
-        // 로그인 성공 시 JWT 토큰 생성
-        log.info("로그인 성공: {}", member.getMemberId());
-        String token = jwtUtil.generateToken(member.getMemberId());
-
-        // HTTP-only 쿠키에 JWT 설정
-        setJwtCookie(response, token);
-
-        return responseDataBuilder.responseCode("YY")
-                                  .resultMessage("로그인 성공")
-                                  .data(loginMember)
-                                  .build();
-    }
-
-    private static void setJwtCookie(HttpServletResponse response, String token) {
-        log.info("토큰 저장: {}", token);
-        Cookie jwtCookie = new Cookie("jwt", token);
-        jwtCookie.setHttpOnly(true);       // 자바스크립트로 접근 불가
-        jwtCookie.setSecure(false);         // HTTPS 환경에서만 전송
-        jwtCookie.setPath("/");            // 모든 경로에서 접근 가능
-        jwtCookie.setMaxAge(24 * 60 * 60); // 쿠키의 유효 기간 설정 1일
-        response.addCookie(jwtCookie);     // 응답에 쿠키 추가
-    }
+//    @PostMapping("/login")
+//    public ResponseData<Object> login(@RequestBody @Valid Member member, HttpServletResponse response, BindingResult br) {
+//        log.info("회원 로그인 시도: {}", member.getMemberId());
+//
+//        ResponseData.ResponseDataBuilder<Object> responseDataBuilder = ResponseData.builder();
+//
+//        if (br.hasErrors()) {
+//            log.warn("유효성 검사 오류: {}", br.getAllErrors());
+//            return responseDataBuilder.responseCode("NN")
+//                                      .resultMessage("잘못된 로그인 정보")
+//                                      .data(null)
+//                                      .build();
+//        }
+//
+//        Member loginMember = memberService.login(member);
+//        if (loginMember == null) {
+//            log.warn("존재하지 않는 회원: {}", member.getMemberId());
+//            return responseDataBuilder.responseCode("NN")
+//                                      .resultMessage("존재하지 않는 회원")
+//                                      .data(null)
+//                                      .build();
+//        }
+//
+//        // 로그인 성공 시 JWT 토큰 생성
+//        log.info("로그인 성공: {}", member.getMemberId());
+//        String token = jwtUtil.generateToken(member.getMemberId());
+//
+//        return responseDataBuilder.responseCode("YY")
+//                                  .resultMessage("로그인 성공")
+//                                  .data(loginMember)
+//                                  .build();
+//    }
 
     @PostMapping("/enroll")
     public ResponseData<Object> enrollMember(@RequestBody @Valid Member member, BindingResult br) {

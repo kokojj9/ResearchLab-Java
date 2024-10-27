@@ -1,6 +1,5 @@
 package com.example.researchlab.member.model.service;
 
-import com.example.researchlab.config.auth.JwtUtil;
 import com.example.researchlab.member.model.dao.MemberMapper;
 import com.example.researchlab.member.model.vo.Member;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +13,7 @@ import org.springframework.stereotype.Service;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberMapper memberMapper;
-    private final JwtUtil jwtUtil;
-    private final BCryptPasswordEncoder bc;
+    private final BCryptPasswordEncoder passwordEncoder;
     private static final Logger logger = LoggerFactory.getLogger(MemberServiceImpl.class);
 
     @Override
@@ -30,23 +28,19 @@ public class MemberServiceImpl implements MemberService {
         }
 
         // 비밀번호 검증
-        if (!bc.matches(member.getMemberPwd(), loginMember.getMemberPwd())) {
+        if (!passwordEncoder.matches(member.getMemberPwd(), loginMember.getMemberPwd())) {
             logger.warn("비밀번호 불일치: {}", member.getMemberId());
             return null;  // 비밀번호 불일치
         }
 
-        // 비밀번호가 일치하면 JWT 토큰 생성
-        logger.info("로그인 성공: {}", member.getMemberId());
-        String token = jwtUtil.generateToken(member.getMemberId());
-        loginMember.setToken(token);  // Member 객체에 토큰 설정 (필드 추가 필요)
-
-        return loginMember;  // 토큰이 포함된 회원 객체 반환
+        logger.info("비밀번호 일치: {}", member.getMemberId());
+        return loginMember;  // 로그인 성공한 회원 객체 반환
     }
 
     @Override
     public int enrollMember(Member member) {
         logger.info("회원가입: {}", member.getMemberId());
-        String encodedPassword = bc.encode(member.getMemberPwd());
+        String encodedPassword = passwordEncoder.encode(member.getMemberPwd());
         member.setMemberPwd(encodedPassword);
 
         int result = memberMapper.enrollMember(member);
