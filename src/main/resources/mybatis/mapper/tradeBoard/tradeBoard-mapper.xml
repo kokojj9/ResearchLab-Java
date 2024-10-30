@@ -133,7 +133,7 @@
          WHERE
                tp.POST_NO = ${postNo}
            AND
-               ti.IS_DELETED = 'N'
+               tp.IS_DELETED = 'N'
     </select>
 
     <update id="deletePost" parameterType="map">

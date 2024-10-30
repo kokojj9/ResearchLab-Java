@@ -13,27 +13,34 @@ import org.springframework.stereotype.Service;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberMapper memberMapper;
-    private final BCryptPasswordEncoder bc;
+    private final BCryptPasswordEncoder passwordEncoder;
     private static final Logger logger = LoggerFactory.getLogger(MemberServiceImpl.class);
 
     @Override
     public Member login(Member member) {
-        logger.info("회원 로그인: {}", member.getMemberId());
-        Member loginMember = memberMapper.login(member);
+        logger.info("회원 로그인 시도: {}", member.getMemberId());
 
-        if (loginMember != null && bc.matches(member.getMemberPwd(), loginMember.getMemberPwd())) {
-            logger.info("비밀번호 일치: {}", member.getMemberId());
-            return loginMember;
+        // 회원 정보 조회
+        Member loginMember = memberMapper.login(member);
+        if (loginMember == null) {
+            logger.warn("존재하지 않는 회원: {}", member.getMemberId());
+            return null;  // 존재하지 않는 회원
         }
 
-        logger.warn("비밀번호 불일치 또는 존재하지 않는 회원: {}", member.getMemberId());
-        return null;
+        // 비밀번호 검증
+        if (!passwordEncoder.matches(member.getMemberPwd(), loginMember.getMemberPwd())) {
+            logger.warn("비밀번호 불일치: {}", member.getMemberId());
+            return null;  // 비밀번호 불일치
+        }
+
+        logger.info("비밀번호 일치: {}", member.getMemberId());
+        return loginMember;  // 로그인 성공한 회원 객체 반환
     }
 
     @Override
     public int enrollMember(Member member) {
         logger.info("회원가입: {}", member.getMemberId());
-        String encodedPassword = bc.encode(member.getMemberPwd());
+        String encodedPassword = passwordEncoder.encode(member.getMemberPwd());
         member.setMemberPwd(encodedPassword);
 
         int result = memberMapper.enrollMember(member);
