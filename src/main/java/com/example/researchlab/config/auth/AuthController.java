@@ -32,24 +32,43 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseData<Object> login(@RequestBody @Valid Member member, HttpServletResponse response) {
         try {
-            // Spring Security를 통한 사용자 인증
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(member.getMemberId(), member.getMemberPwd())
             );
 
-            Member loginMember = memberService.login(member);
+            Member loginMember = memberService.findMemberById(member.getMemberId());
             if (loginMember == null) {
                 return ResponseData.builder().resultMessage("사용자가 존재하지 않습니다.").build();
             }
 
-            // JWT 토큰 생성 및 쿠키에 저장
-            String token = jwtUtil.generateToken(loginMember.getMemberId());
-            setJwtCookie(response, token);
-            return ResponseData.builder().data(loginMember).resultMessage("사용자가 존재하지 않습니다.").build();
+            // JWT 액세스 토큰과 리프레시 토큰 생성
+            String accessToken = jwtUtil.generateToken(loginMember.getMemberId());
+            String refreshToken = jwtUtil.generateRefreshToken(loginMember.getMemberId());
+
+            // HttpOnly 쿠키에 액세스 토큰과 리프레시 토큰 저장
+            setJwtCookie(response, accessToken, "jwt");
+            setJwtCookie(response, refreshToken, "refreshToken");
+
+            return ResponseData.builder().data(loginMember).resultMessage("로그인 성공").build();
 
         } catch (AuthenticationException e) {
             log.error("인증 실패: {}", e.getMessage());
-            return ResponseData.builder().resultMessage("인증실패").build();
+            return ResponseData.builder().resultMessage("인증 실패").build();
+        }
+    }
+
+    @PostMapping("/refresh")
+    public ResponseData<Object> refreshAccessToken(HttpServletRequest request, HttpServletResponse response) {
+        Cookie refreshTokenCookie = WebUtils.getCookie(request, "refreshToken");
+        String refreshToken = (refreshTokenCookie != null) ? refreshTokenCookie.getValue() : null;
+
+        if (refreshToken != null && jwtUtil.validateRefreshToken(refreshToken)) {
+            String username = jwtUtil.extractUsername(refreshToken);
+            String newAccessToken = jwtUtil.generateToken(username);
+            setJwtCookie(response, newAccessToken, "jwt"); // 새 액세스 토큰 쿠키에 저장
+            return ResponseData.builder().resultMessage("새 액세스 토큰 발급").build();
+        } else {
+            return ResponseData.builder().resultMessage("리프레시 토큰이 유효하지 않음").build();
         }
     }
 

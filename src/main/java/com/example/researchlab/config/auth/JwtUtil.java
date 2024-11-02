@@ -66,16 +66,17 @@ public class JwtUtil {
      * JWT 토큰 유효성 검증 메서드: 사용자 이름 일치 여부와 만료 여부를 확인합니다.
      *
      * @param token JWT 토큰
-     * @param username 사용자 이름
      * @return 토큰이 유효한 경우 true, 그렇지 않은 경우 false
      */
-    public boolean validateToken(String token, String username) {
-        log.debug("JWT 유효성 검사: 사용자 - {}", username);
-        boolean isValid = extractUsername(token).equals(username) && !isTokenExpired(token);
-        log.debug("JWT 유효성 검사 결과: {}", isValid ? "유효함" : "유효하지 않음");
-        return isValid;
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            log.error("JWT 유효성 검사 실패: {}", e.getMessage());
+            return false;
+        }
     }
-
     /**
      * 토큰 만료 여부를 확인하는 메서드
      *
@@ -107,4 +108,30 @@ public class JwtUtil {
             throw new RuntimeException("JWT parsing error", e);
         }
     }
+
+    /**
+     * 리프레시토큰 생성
+     * @param username
+     * @return
+     */
+    public String generateRefreshToken(String username) {
+        log.info("리프레시 토큰 생성: 사용자 - {}", username);
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7)) // 7일 만료
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    /**
+     * 리프레시토큰 검증
+     * @param token
+     * @return
+     */
+    public boolean validateRefreshToken(String token) {
+        return validateToken(token);
+    }
+
+
 }

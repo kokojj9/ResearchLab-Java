@@ -24,17 +24,16 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable) // CSRF 비활성화
-            .authorizeRequests(auth -> auth
-               .requestMatchers("/members/login", "/strategylab/**").permitAll() // 인증 없이 접근 허용
-               .anyRequest().authenticated() // 나머지 요청은 인증 필요
-            );
-
-        // JWT 필터 추가
-        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        http.csrf(AbstractHttpConfigurer::disable)
+                .authorizeRequests(auth -> auth
+                        .requestMatchers("/members/enroll", "/strategylab/**").permitAll() // 인증 없이 접근 허용
+                        .anyRequest().authenticated()
+                )
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+
 
     // AuthenticationManager 빈 등록
     @Bean
