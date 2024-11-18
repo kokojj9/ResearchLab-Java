@@ -18,8 +18,6 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Member login(Member member) {
-        logger.info("회원 로그인 시도: {}", member.getMemberId());
-
         // 회원 정보 조회
         Member loginMember = memberMapper.login(member);
         if (loginMember == null) {
@@ -32,7 +30,7 @@ public class MemberServiceImpl implements MemberService {
             logger.warn("비밀번호 불일치: {}", member.getMemberId());
             return null;  // 비밀번호 불일치
         }
-
+        member.setMemberPwd(null); // 반환 데이터 삭제
         logger.info("비밀번호 일치: {}", member.getMemberId());
         return loginMember;  // 로그인 성공한 회원 객체 반환
     }
